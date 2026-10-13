@@ -824,7 +824,7 @@ document.querySelectorAll("section").forEach(function(s){s.classList.add("reveal
    Live sync only works when this page is hosted on your own site (not inside claude.ai). */
 var GOOGLE_CALENDAR_ID="702620f166e1b5f7c776d0ef6aa126d8179a390a7ca89a44c956243222104761@group.calendar.google.com",GOOGLE_API_KEY="AIzaSyApwC3b94aEHALNhYnaQH3Bo80G8atevTg",BOOKED_DATES=[];
 /* BACKEND_URL: the Web app URL from booking-backend/SETUP-GUIDE.md (ends with /exec). Leave empty to run without it. */
-var BACKEND_URL="";
+var BACKEND_URL="https://script.google.com/macros/s/AKfycbwZFOaKqoIZ8LzngXcGawoQ4fcBL3am1kmfmD6e2kzGVV1YHGHETiHMOL5yEgZcyffg2A/exec";
 /* Address of your live site. Used for the Customer login button when this page is viewed somewhere the booking system is not connected. */
 var LIVE_SITE="https://shubhambankar.bankarshubhan384.workers.dev";
 function getJ(q,cb,err){fetch(BACKEND_URL+q).then(function(r){return r.json()}).then(cb).catch(err||function(){})}
@@ -898,7 +898,7 @@ function wa(txt,label,cls){var a=el("a",label,cls);a.href="https://api.whatsapp.
 var lastSel=0,lastBr,advAmt=0;
 function esc(){return "\u20B9"}
 function showPaid(){pb.innerHTML="";var sv=getBk(),cont=sv&&sv.pays.length<3,pl=cont&&(sv.total||sv.adv)?plan(sv):null;
-pb.appendChild(el("p",(cont?"Payment "+(sv.pays.length+1)+" of 3: "+LBL[sv.pays.length]+". ":"")+"Enter your payment details. I will check them and confirm your booking on WhatsApp."));
+pb.appendChild(el("p",(cont?"Payment "+(sv.pays.length+1)+" of 3: "+lblOf(getBk(),sv.pays.length)+". ":"")+"Enter your payment details. I will check them and confirm your booking on WhatsApp."));
 [["Your name","text","pf-n",cont?sv.n:$("b-name").value],["Your WhatsApp number","tel","pf-p",cont?sv.ph:$("b-phone").value],["Event date","date","pf-d",cont?sv.d:$("b-date").value],["Amount paid (INR)","number","pf-a",cont?(pl?pl[sv.pays.length]:""):(advAmt||"")],["UPI transaction ID (UTR)","text","pf-u",""]].forEach(function(x){var l=el("label",x[0]),i=el("input");i.type=x[1];i.id=x[2];i.value=x[3];if(x[2]==="pf-a"&&x[3])i.readOnly=true;if(x[1]==="number"){i.min="1";i.inputMode="numeric"}l.appendChild(i);pb.appendChild(l)});
 var m=el("p",null,"pf-m");m.id="pf-m";m.setAttribute("role","status");pb.appendChild(m);
 var go=el("button","Send payment confirmation on WhatsApp","btn");go.type="button";go.addEventListener("click",submitPaid);pb.appendChild(go);
@@ -909,7 +909,7 @@ if(!d){m.textContent="Please choose your event date.";return}if(!(+a>0)){m.textC
 if(!/^[A-Za-z0-9]{8,30}$/.test(u)){m.textContent="Please enter the UPI transaction ID (UTR) from your payment app.";return}
 var t=new Date(),ref="SB"+String(t.getFullYear()).slice(2)+pad(t.getMonth()+1)+pad(t.getDate())+Math.floor(1000+Math.random()*9000);
 var sv0=getBk(),cont=sv0&&sv0.pays.length<3&&sv0.d===d,k=cont?sv0.pays.length:0;if(cont)ref=sv0.ref;if(BACKEND_URL&&!cont){m.textContent="Please book your slot first with the Book this slot button, or find your booking on the customer page.";return}var slotTxt=cont&&sv0.slot?sv0.slot+(sv0.tm?" (from "+sv0.tm+")":""):$("b-slot").value+($("b-time").value?" (from "+$("b-time").value+")":"");
-var txt="Hi Shubham, I have paid: "+LBL[k]+".\nBooking ref: "+ref+"\nName: "+n+"\nWhatsApp: "+ph+"\nEvent date: "+d+"\nEvent time: "+slotTxt+"\nAmount paid: "+esc()+a+"\nUPI transaction ID: "+u+"\nPlease confirm my booking.";
+var txt="Hi Shubham, I have paid: "+lblOf(getBk(),k)+".\nBooking ref: "+ref+"\nName: "+n+"\nWhatsApp: "+ph+"\nEvent date: "+d+"\nEvent time: "+slotTxt+"\nAmount paid: "+esc()+a+"\nUPI transaction ID: "+u+"\nPlease confirm my booking.";
 try{var arr=JSON.parse(localStorage.getItem("sb_pending")||"[]");if(arr.indexOf(d)<0)arr.push(d);localStorage.setItem("sb_pending",JSON.stringify(arr))}catch(e){}
 pend[d]=1;render();
 var tp=$("b-type").value==="Other"?($("b-other").value.trim()||"Other"):$("b-type").value,spv=Math.round(+$("sp-a").value);
@@ -917,7 +917,7 @@ if(cont&&!sv0.total&&spv>0)sv0.total=spv;saveBk(cont?sv0:{ref:ref,n:n,ph:ph,e:$(
 if(BACKEND_URL){var bk0=getBk();postJ({action:"payment",ref:ref,name:n,phone:ph,email:bk0.e||"",date:d,type:bk0.t,total:bk0.total||0,stage:k+1,amount:+a,utr:u});setTimeout(syncMy,3000)}
 try{localStorage.setItem("sb_profile",JSON.stringify({n:n,p:ph,e:$("b-email").value.trim()}))}catch(e){}renderMy();
 pb.innerHTML="";pb.appendChild(el("p","Payment details ready. Press send in WhatsApp so I receive them. I will check the payment and confirm your booking on WhatsApp.","upi-id"));
-pb.appendChild(el("p","Booking ref: "+ref+"\nPayment: "+LBL[k]+"\nEvent date: "+d+"\nEvent time: "+slotTxt+"\nAmount paid: "+esc()+a+"\nUTR: "+u));
+pb.appendChild(el("p","Booking ref: "+ref+"\nPayment: "+lblOf(getBk(),k)+"\nEvent date: "+d+"\nEvent time: "+slotTxt+"\nAmount paid: "+esc()+a+"\nUTR: "+u));
 pb.lastChild.style.whiteSpace="pre-line";
 pb.appendChild(wa(txt,"Open WhatsApp and send","btn"));
 var em=$("b-email").value.trim();if(/^\S+@\S+\.\S+$/.test(em)){var g=el("a","Email me a copy","gbtn");g.href="https://mail.google.com/mail/?view=cm&fs=1&to="+encodeURIComponent(em)+"&cc=bankarshubhan384%40gmail.com&su="+encodeURIComponent("Payment details, ref "+ref)+"&body="+encodeURIComponent(txt);g.target="_blank";g.rel="noopener";pb.appendChild(g)}
@@ -926,12 +926,12 @@ function openPay(sel,br){pb.innerHTML="";lastSel=sel;lastBr=br;pd.dataset.brand=
 var bk0=getBk(),idx=bk0&&bk0.pays?bk0.pays.length:0;
 pb.appendChild(el("p",(idx>0?"Pay your next installment.":"Pay the 50% advance to block your date.")+" Then send the payment details so I can confirm your booking."));
 var pl0=bk0&&idx<3&&(bk0.total||bk0.adv)?plan(bk0):null,amt0=pl0?pl0[idx]:0,dyn=amt0>0,tabs=[];
-function tnp(){return bk0?encodeURIComponent((bk0.ref+" "+LBL[idx].split(" ")[0]).slice(0,40)):""}
+function tnp(){return bk0?encodeURIComponent((bk0.ref+" "+lblOf(getBk(),idx).split(" ")[0]).slice(0,40)):""}
 function mkLink(a,g){return g?"upi://pay?pa="+GPAY.id+"&pn="+encodeURIComponent(GPAY.name)+(a>0?"&am="+a.toFixed(2):"")+"&cu=INR"+(a>0&&bk0?"&tn="+tnp():"")+"&aid="+GPAY.aid:"upi://pay?pa="+PAY.upiId+"&pn="+encodeURIComponent(PAY.payee)+(a>0?"&am="+a.toFixed(2):"")+"&cu=INR"+(a>0&&bk0?"&tn="+tnp():"")+"&mc=0000&mode=02&purpose=00"}
 if(dyn){tabs.push({n:"PhonePe / any UPI app",dyn:true,brand:"p",link:mkLink(amt0),src:qrDataUrl(mkLink(amt0),6)});tabs.push({n:"Google Pay",dyn:true,brand:"g",link:mkLink(amt0,true),src:qrDataUrl(mkLink(amt0,true),6)})}
 else PAY.qr.forEach(function(q,i){tabs.push({n:q.n,src:q.src,brand:i===0?"p":"g",link:mkLink(0,i===1)})});
 var start=dyn?(br==="g"||(br==null&&sel===1)?1:0):sel,tb=el("div",null,"chips"),im=el("img"),note=el("p",null,"mute-note"),u=el("a","Open UPI app","btn");
-function pick(i){var q=tabs[i];[].forEach.call(tb.children,function(x,k){x.setAttribute("aria-pressed",String(k===i))});pd.dataset.brand=q.brand;im.src=q.src;im.alt=q.n+" payment QR code";u.href=q.link;note.textContent=q.dyn?"Scan to pay exactly "+inr(amt0)+" ("+LBL[idx]+") with "+q.n+". The amount is already filled in.":"Scan with PhonePe or Google Pay and enter the amount yourself."}
+function pick(i){var q=tabs[i];[].forEach.call(tb.children,function(x,k){x.setAttribute("aria-pressed",String(k===i))});pd.dataset.brand=q.brand;im.src=q.src;im.alt=q.n+" payment QR code";u.href=q.link;note.textContent=q.dyn?"Scan to pay exactly "+inr(amt0)+" ("+lblOf(getBk(),idx)+") with "+q.n+". The amount is already filled in.":"Scan with PhonePe or Google Pay and enter the amount yourself."}
 tabs.forEach(function(q,i){var b=el("button",q.n,"chip "+(q.brand==="g"?"tb-g":"tb-p"));b.type="button";b.setAttribute("aria-pressed","false");b.addEventListener("click",function(){pick(i)});tb.appendChild(b)});
 pb.appendChild(tb);pb.appendChild(im);pb.appendChild(note);pick(start);
 pb.appendChild(el("p",null,"Or pay to this UPI ID:"));pb.appendChild(el("div",PAY.upiId,"upi-id"));pb.appendChild(u);
@@ -947,9 +947,10 @@ $("pay-x").addEventListener("click",function(){pd.close()});pd.addEventListener(
 var LBL=["Advance (50%)","Shoot day payment (25%)","Delivery day payment (25%)"];
 function getBk(){try{return JSON.parse(localStorage.getItem("sb_booking")||"null")}catch(e){return null}}
 function saveBk(b,pay){b.pays.push(pay);try{localStorage.setItem("sb_booking",JSON.stringify(b))}catch(e){}}
+function lblOf(b,i){return(b&&b.labels&&b.labels[i])||LBL[i]}
 function plan(b){if(b.plan&&b.plan.length===3)return b.plan.map(Number);var t=b.total||0,a=b.adv||0,p=a>0?a:Math.round(t*.5);if(!t)return[p,0,0];var q=Math.round((t-p)/2);return[p,q,t-p-q]}
 function renderMy(skip){var c=$("mybk");c.innerHTML="";c.hidden=true;if(!skip)syncMy()}
-function syncMy(){var b=getBk();if(!BACKEND_URL||!b)return;getJ("?action=lookup&ref="+encodeURIComponent(b.ref)+"&phone="+b.ph.slice(-10),function(j){if(!j||!j.ok)return;j.pays.forEach(function(x){var s=b.pays[x.stage-1];if(s)s.s=x.status});b.total=+j.booking.total||b.total||0;b.adv=+j.booking.advance||0;b.plan=j.booking.plan||null;try{localStorage.setItem("sb_booking",JSON.stringify(b))}catch(e){}renderMy(true)})}
+function syncMy(){var b=getBk();if(!BACKEND_URL||!b)return;getJ("?action=lookup&ref="+encodeURIComponent(b.ref)+"&phone="+b.ph.slice(-10),function(j){if(!j||!j.ok)return;if(j.completed){try{localStorage.removeItem("sb_booking")}catch(e){}return}j.pays.forEach(function(x){var s=b.pays[x.stage-1];if(s)s.s=x.status});b.labels=j.booking.labels||null;b.total=+j.booking.total||b.total||0;b.adv=+j.booking.advance||0;b.plan=j.booking.plan||null;try{localStorage.setItem("sb_booking",JSON.stringify(b))}catch(e){}renderMy(true)})}
 function saveProfile(){try{localStorage.setItem("sb_profile",JSON.stringify({n:$("b-name").value,p:$("b-phone").value,e:$("b-email").value}))}catch(e){}}
 function loadProfile(){try{var p=JSON.parse(localStorage.getItem("sb_profile")||"null");if(!p)return;if(!$("b-name").value)$("b-name").value=p.n||"";if(!$("b-phone").value)$("b-phone").value=p.p||"";if(!$("b-email").value)$("b-email").value=p.e||""}catch(e){}}
 ["b-book","b-discuss"].forEach(function(i){$(i).addEventListener("click",saveProfile)});
