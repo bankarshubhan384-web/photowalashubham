@@ -115,7 +115,7 @@ if(!BACKEND_URL){m.textContent="The booking system is not connected yet. Please 
 m.textContent="Searching...";
 getJ("?action=lookup&ref="+encodeURIComponent(ref)+"&phone="+ph,function(j){
 if(!j||!j.ok){m.textContent="No booking found. Check the ref and the number you booked with.";return}
-ST={b:j.booking,p:j.pays,reviewed:j.reviewed,phone:ph,done:!!j.completed,note:j.note||""};m.textContent="";try{sessionStorage.setItem("cust",JSON.stringify({ref:ref,ph:ph}))}catch(e){}draw()},
+ST={b:j.booking,p:j.pays,reviewed:j.reviewed,phone:ph,done:!!j.completed,note:j.note||"",rzp:!!j.rzp};m.textContent="";try{sessionStorage.setItem("cust",JSON.stringify({ref:ref,ph:ph}))}catch(e){}draw()},
 function(){m.textContent="Could not reach the booking system. Please try again."})}
 $("go").addEventListener("click",find);
 if(window.self!==window.top)$("back").hidden=true;
@@ -219,9 +219,9 @@ var go=E("button","pri","Ask Shubham"),msg=E("p","msg");go.addEventListener("cli
 postR({action:"question",ref:b.ref,phone:ST.phone,text:t},function(j){go.disabled=false;if(j&&j.ok){msg.textContent="Sent. Shubham will reply on WhatsApp.";var w=E("a","btn","Also message him on WhatsApp");w.href=wa(t);w.target="_blank";w.rel="noopener";w.style.marginLeft="8px";msg.appendChild(document.createElement("br"));msg.appendChild(w)}else msg.textContent=j&&j.error==="limit"?"You have asked a few times already. Please wait for Shubham's reply.":"Could not send. Please message Shubham on WhatsApp."},function(){go.disabled=false;msg.textContent="Could not reach the booking system."})});
 A(c,go,msg);return c}
 
-/* ---- pay your remaining amount: choose 1st, 2nd or 3rd; the QR is valid for 30 minutes ---- */
+/* ---- pay your remaining amount: choose 1st, 2nd or 3rd; the QR is valid for 15 minutes ---- */
 function upiLink(a,g,tn){var q="&am="+(+a).toFixed(2)+"&cu=INR&tn="+encodeURIComponent(tn.slice(0,40));return g?"upi://pay?pa="+GP.id+"&pn="+encodeURIComponent(GP.name)+q+"&aid="+GP.aid:"upi://pay?pa="+UPI.id+"&pn="+encodeURIComponent(UPI.name)+q+"&mc=0000&mode=02&purpose=00"}
-var QMS=window.__QR_MS||1800000;
+var QMS=window.__QR_MS||900000;
 function sesKey(){return "pay_"+ST.b.ref}
 function getSes(){try{return JSON.parse(sessionStorage.getItem(sesKey())||"null")}catch(e){return null}}
 function startSes(i){try{sessionStorage.setItem(sesKey(),JSON.stringify({stage:i,until:Date.now()+QMS}))}catch(e){}}
@@ -241,7 +241,7 @@ c.appendChild(grid);return c}
 function warnOv(i){var b=ST.b,pl=planOf(b),o=E("div","ov"),bx=E("div","box"),cb=E("button","pri cont","Continue");
 function close(){o.remove();cb.remove()}
 A(bx,E("h2",null,"Before you pay"),E("p","mute",ORD[i]+" | "+lab(i)),E("div","amt",inr(pl[i])));
-var w=E("div","warnbox");w.innerHTML="<b>Your payment QR code is valid for 30 minutes.</b><br>After 30 minutes it expires. You will then need to contact Shubham or log in again to get a new QR code. Please finish your payment before it expires.";bx.appendChild(w);
+var w=E("div","warnbox");w.innerHTML="<b>Your payment QR code is valid for 15 minutes.</b><br>After 15 minutes it expires. You will then need to contact Shubham or log in again to get a new QR code. Please finish your payment before it expires.";bx.appendChild(w);
 var back=E("button",null,"Go back");back.type="button";back.addEventListener("click",close);bx.appendChild(back);o.appendChild(bx);
 cb.type="button";cb.addEventListener("click",function(){close();startSes(i);openWait(i)});document.body.appendChild(o);document.body.appendChild(cb);SFX.warn()}
 function openWait(i){var S=getSes();if(!S||S.stage!==i||S.until<=Date.now()){expiredOv();return}
@@ -249,6 +249,8 @@ var b=ST.b,amt=planOf(b)[i],x=overlay(),o=x.o,bx=x.bx,cur=0,submitted=ST.p.some(
 function stop(){gone=true;clearInterval(tT);clearInterval(pT)}
 A(bx,E("h2",null,"Pay "+inr(amt)),E("p","mute",ORD[i]+" | "+lab(i)));
 var C=2*Math.PI*56,rg=E("div","ring");rg.innerHTML='<svg width="132" height="132" viewBox="0 0 132 132"><circle class="bg" cx="66" cy="66" r="56"/><circle class="fg" cx="66" cy="66" r="56" stroke-dasharray="'+C+'" stroke-dashoffset="0"/></svg><div class="t"></div>';bx.appendChild(rg);
+var rzM=E("p","msg");
+if(ST.rzp&&!submitted){var rb=E("button","pri","Pay instantly online (UPI, card, netbanking)");rb.type="button";rb.style.margin="6px 0";rb.addEventListener("click",function(){rzpPay(i,rb,rzM,function(){poll()})});A(bx,rb,rzM,E("p","mute","Confirmed automatically in a few seconds. Or scan the UPI QR below, which Shubham confirms by hand."))}
 var tb=E("div","tabs");tb.style.justifyContent="center";var im=E("img","qr"),nt=E("p","mute"),op=E("a","btn","Open UPI app"),tabEls=[];
 function link(g){return upiLink(amt,g,b.ref+" "+lab(i).split(" ")[0])}
 function qr(){var l=link(cur===1);im.src=qrDataUrl(l,6);im.alt="Payment QR code for "+inr(amt);op.href=l;nt.textContent="Scan to pay exactly "+inr(amt)+" with "+(cur===1?"Google Pay":"PhonePe or any UPI app")+". The amount is already filled in."}
@@ -264,7 +266,7 @@ function tick(){var left=S.until-Date.now();rg.querySelector(".t").textContent=s
 if(left<=0&&!submitted&&!gone){stop();o.remove();clearSes();expiredOv()}}
 function poll(){if(gone)return;getJ("?action=lookup&ref="+encodeURIComponent(b.ref)+"&phone="+ST.phone,function(j){if(gone||!j||!j.ok)return;
 if(j.completed){stop();o.remove();clearSes();ST={b:j.booking,p:[],reviewed:j.reviewed,phone:ST.phone,done:true,note:j.note||""};draw();return}
-ST.p=j.pays;ST.b=j.booking;var mine=j.pays.filter(function(p){return p.stage===i+1});
+ST.p=j.pays;ST.b=j.booking;ST.rzp=!!j.rzp;var mine=j.pays.filter(function(p){return p.stage===i+1});
 if(mine.some(function(p){return p.status==="Confirmed"})){stop();o.remove();clearSes();draw();paySuccess(i,amt);return}
 if(mine.length&&mine.every(function(p){return p.status==="Rejected"})){ws.textContent="Shubham could not confirm this payment. Please message him on WhatsApp.";SFX.warn();return}
 if(mine.some(function(p){return p.status==="Pending"}))setSub()})}
@@ -273,15 +275,23 @@ go.disabled=true;msg.textContent="Sending...";postR({action:"payment",ref:b.ref,
 if(j&&j.ok){ST.p.push({stage:i+1,label:lab(i),amount:amt,utr:u,status:"Pending"});msg.textContent="";setSub();SFX.ding()}else msg.textContent="Could not send. Check the details or message Shubham on WhatsApp."},function(){go.disabled=false;msg.textContent="Could not reach the booking system."})});
 cl.addEventListener("click",function(){stop();o.remove();draw()});
 if(submitted)setSub();else{setWait();qr()}tick();tT=setInterval(tick,1000);pT=setInterval(poll,window.__POLL_MS||6000)}
+function loadRzp(cb){if(window.Razorpay){cb();return}var s=document.createElement("script");s.src="https://checkout.razorpay.com/v1/checkout.js";s.onload=cb;s.onerror=function(){alert("Could not load the secure payment window. Please check your internet.")};document.head.appendChild(s)}
+function rzpPay(i,btn,msgEl,onOk){btn.disabled=true;msgEl.textContent="Opening secure payment...";
+postR({action:"rzp_order",ref:ST.b.ref,phone:ST.phone,stage:i+1},function(j){btn.disabled=false;
+if(!j||!j.ok){msgEl.textContent=j&&j.error==="already"?"This payment is already received or waiting for confirmation.":"Online payment is not available right now. Please use the UPI QR below.";return}
+loadRzp(function(){var o={key:j.key,amount:j.amount,currency:"INR",name:j.name,description:j.desc,order_id:j.order,prefill:j.prefill,theme:{color:(getComputedStyle(document.documentElement).getPropertyValue("--gold")||"#E23B52").trim()},
+handler:function(r){msgEl.textContent="Confirming your payment...";postR({action:"rzp_verify",phone:ST.phone,order_id:r.razorpay_order_id,payment_id:r.razorpay_payment_id,signature:r.razorpay_signature},function(v){if(v&&v.ok){msgEl.textContent="";onOk()}else msgEl.textContent="Your payment went through but could not be confirmed here. Please message Shubham with your payment id "+r.razorpay_payment_id+"."},function(){msgEl.textContent="Your payment went through. Please message Shubham with your payment id "+r.razorpay_payment_id+"."})},
+modal:{ondismiss:function(){msgEl.textContent="The payment window was closed."}}};
+try{new Razorpay(o).open()}catch(e){msgEl.textContent="Could not open the payment window."}})},function(){btn.disabled=false;msgEl.textContent="Could not reach the booking system."})}
 function expiredOv(){var x=overlay(),b=ST.b;clearSes();x.bx.appendChild(E("div","big","\u23F0"));
-A(x.bx,E("h2",null,"Your payment QR expired"),E("p",null,"For your safety, a payment QR works for 30 minutes only. If you have already paid, message Shubham with your transaction ID. Otherwise log in again to get a new QR code."));
+A(x.bx,E("h2",null,"Your payment QR expired"),E("p",null,"For your safety, a payment QR works for 15 minutes only. If you have already paid, message Shubham with your transaction ID. Otherwise log in again to get a new QR code."));
 var r=E("div","row");r.style.justifyContent="center";var w=E("a","btn","Contact Shubham on WhatsApp");w.href=wa("Hello Shubham, my payment QR expired for booking "+b.ref+".");w.target="_blank";w.rel="noopener";
 var lg=E("button","pri","Log in again");lg.type="button";lg.addEventListener("click",function(){x.o.remove();try{sessionStorage.removeItem("cust")}catch(e){}ST={b:null,p:[],reviewed:false,phone:""};$("view").hidden=true;$("view").innerHTML="";$("ref").value=b.ref;$("ph").value="";$("fmsg").textContent="Please log in again to get a new QR code.";window.scrollTo({top:0,behavior:"smooth"});$("ph").focus()});
 A(r,w,lg);x.bx.appendChild(r);SFX.warn()}
 
 /* ---- accepted payment methods ---- */
 function methodsCard(){var c=E("div","card");c.appendChild(E("h2",null,"Accepted payment methods"));var g=E("div","pm");
-[["UPI",["PhonePe","Google Pay"],"Pay from any UPI app to "+UPI.id],["QR code payment",["Scan and pay"],"Your personal QR above already has the exact amount"]].forEach(function(x){var d=E("div");d.appendChild(E("b",null,x[0]));x[1].forEach(function(t){d.appendChild(E("span","tag",t))});d.appendChild(E("span","mute",x[2]));g.appendChild(d)});
+(ST.rzp?[["Online payment",["UPI","Cards","Netbanking"],"Pay securely online. Confirmed automatically in a few seconds."]]:[]).concat([["UPI",["PhonePe","Google Pay"],"Pay from any UPI app to "+UPI.id],["QR code payment",["Scan and pay"],"Your personal QR already has the exact amount"]]).forEach(function(x){var d=E("div");d.appendChild(E("b",null,x[0]));x[1].forEach(function(t){d.appendChild(E("span","tag",t))});d.appendChild(E("span","mute",x[2]));g.appendChild(d)});
 c.appendChild(g);return c}
 
 /* ---- rating ---- */
