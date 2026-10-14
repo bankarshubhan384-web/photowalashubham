@@ -329,7 +329,7 @@ D.bookings.filter(function(b){return(filter==="All"||(filter==="Upcoming"?b.date
 if(!l.children.length)l.appendChild(E("p","mute","No bookings here."))}
 function bookCard(b){var s=sums(b),c=E("div","card");
 var top=E("div","row");A(top,E("span","big",b.name),E("span","badge b-"+b.status,b.status),E("span","badge",b.ref),E("span","badge",b.source||"Website"));c.appendChild(top);
-A(c,E("p",null,fd(b.date)+"  |  "+b.slot+(b.time?" from "+b.time:"")+"  |  "+b.type+(b.location?"  |  "+b.location:"")));
+A(c,E("p",null,fd(b.date)+"  |  "+b.slot+(b.time?" from "+b.time:"")+"  |  "+b.type+(b.location?"  |  "+b.location:"")));if(b.mapLink){var ml=E("a","btn","Open map");ml.href=b.mapLink;ml.target="_blank";ml.rel="noopener";ml.style.cssText="display:inline-block;margin:4px 0;text-decoration:none";A(c,ml)}
 if(b.notes)c.appendChild(E("p","mute","Notes: "+b.notes));
 c.appendChild(E("p","mute","Payment plan: "+planText(b)));
 var contact=E("div","row"),tel=E("a","btn","Call +91 "+b.phone);tel.href="tel:+91"+b.phone;
