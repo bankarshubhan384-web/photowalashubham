@@ -64,7 +64,7 @@ a{color:var(--gold)}[hidden]{display:none!important}
 :root[data-theme="light"] .ov{background:rgba(245,239,226,.9)}
 .ov .box{width:min(460px,100%);background:var(--bg);border:1px solid var(--line);border-radius:26px;padding:20px;margin:auto;box-shadow:0 30px 80px -20px #000;text-align:center}
 .warnbox{padding:14px;border-radius:18px;border:1px solid rgba(251,191,36,.6);background:rgba(251,191,36,.12);text-align:left;margin:12px 0}
-.cont{position:fixed;left:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;padding:14px 26px;font-size:16px;box-shadow:0 14px 40px -10px var(--gold)}
+.cont{position:fixed;left:0;right:0;margin:0 auto;width:max-content;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;padding:14px 26px;font-size:16px;box-shadow:0 14px 40px -10px var(--gold)}
 .ring{position:relative;width:132px;height:132px;margin:8px auto}.ring svg{transform:rotate(-90deg)}.ring .t{position:absolute;inset:0;display:grid;place-items:center;font:700 26px var(--sans)}
 .ring circle{fill:none;stroke-width:9}.ring .bg{stroke:var(--line)}.ring .fg{stroke:var(--gold);stroke-linecap:round;transition:stroke-dashoffset 1s linear}
 .wait{display:flex;align-items:center;gap:10px;justify-content:center;margin:8px 0;color:var(--gold);font-weight:600}.wait i{width:10px;height:10px;border-radius:50%;background:var(--gold);animation:pulse 1.2s infinite}.wait i:nth-child(2){animation-delay:.2s}.wait i:nth-child(3){animation-delay:.4s}
@@ -87,6 +87,11 @@ a{color:var(--gold)}[hidden]{display:none!important}
 <label>WhatsApp number<input id="ph" type="tel" inputmode="numeric" placeholder="10-digit number"></label>
 <button class="pri" id="go">Find my booking</button>
 <p id="fmsg" class="mute"></p>
+<div id="otpbox" hidden>
+<label>6-digit code we sent you<input id="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="123456"></label>
+<p><button class="pri" id="otpgo">Verify and open my booking</button> <button type="button" id="otpre">Send a new code</button></p>
+<p id="omsg" class="mute"></p>
+</div>
 </div>
 <div id="view" hidden></div>
 </div>
@@ -103,25 +108,44 @@ function A(p){for(var i=1;i<arguments.length;i++)if(arguments[i])p.appendChild(a
 function inr(n){return "\u20B9"+(+n||0).toLocaleString("en-IN")}
 function fd(s){try{return new Date(s+"T00:00:00").toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}catch(e){return s}}
 function wa(t){return "https://api.whatsapp.com/send?phone=919284423297&text="+encodeURIComponent(t)}
-function getJ(q,cb,err){fetch(BACKEND_URL+q).then(function(r){return r.json()}).then(cb).catch(err||function(){})}
-function postR(o,cb,err){fetch(BACKEND_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(o)}).then(function(r){return r.json()}).then(cb).catch(err||function(){})}
+var TOK="";
+function expired(){TOK="";try{sessionStorage.removeItem("cust")}catch(e){}ST={b:null,p:[],reviewed:false,phone:""};$("view").hidden=true;$("view").innerHTML="";$("otpbox").hidden=true;$("fmsg").textContent="For your safety your session ended. Please log in again.";window.scrollTo({top:0,behavior:"smooth"})}
+function chk(j,cb){if(j&&j.error==="auth"&&TOK&&ST&&ST.b){expired();return}cb(j)}
+function getJ(q,cb,err){fetch(BACKEND_URL+q+(TOK?"&token="+encodeURIComponent(TOK):"")).then(function(r){return r.json()}).then(function(j){chk(j,cb)}).catch(err||function(){})}
+function postR(o,cb,err){if(TOK&&!o.token)o.token=TOK;fetch(BACKEND_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(o)}).then(function(r){return r.json()}).then(function(j){chk(j,cb)}).catch(err||function(){})}
 function planOf(b){if(b.plan&&b.plan.length===3)return b.plan.map(Number);var t=b.total||0,a=b.advance||0,p=a>0?a:Math.round(t*.5);if(!t)return[p,0,0];var q=Math.round((t-p)/2);return[p,q,t-p-q]}
 function dlB64(b64,name){try{var bin=atob(b64),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);var url=URL.createObjectURL(new Blob([u],{type:"application/pdf"})),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){a.remove();URL.revokeObjectURL(url)},5000)}catch(e){}}
 function pdfBtn(label,kind,n){var x=E("button",null,label);x.type="button";x.addEventListener("click",function(){var t=x.textContent;x.disabled=true;x.textContent="Preparing PDF...";getJ("?action=pdf&ref="+encodeURIComponent(ST.b.ref)+"&phone="+ST.phone+"&kind="+kind+"&n="+n,function(j){x.disabled=false;x.textContent=t;if(j&&j.ok)dlB64(j.b64,j.name);else x.textContent="PDF not available"},function(){x.disabled=false;x.textContent="Could not get the PDF"})});return x}
 
+var PEND=null;
+function lookupNow(ref,ph,cb){getJ("?action=lookup&ref="+encodeURIComponent(ref)+"&phone="+ph,function(j){
+if(!j||!j.ok){cb(false);return}
+ST={b:j.booking,p:j.pays,reviewed:j.reviewed,phone:ph,done:!!j.completed,note:j.note||"",rzp:!!j.rzp};$("fmsg").textContent="";$("otpbox").hidden=true;try{sessionStorage.setItem("cust",JSON.stringify({ref:ref,ph:ph,tok:TOK}))}catch(e){}draw();cb(true)},
+function(){$("fmsg").textContent="Could not reach the booking system. Please try again."})}
+function sendCode(ref,ph){var m=$("fmsg");m.textContent="Sending your code...";TOK="";PEND={ref:ref,ph:ph};
+postR({action:"c_start",ref:ref,phone:ph},function(j){
+if(j&&j.ok){m.textContent="";$("otpbox").hidden=false;$("otp").value="";$("omsg").textContent=(j.via==="whatsapp"?"We sent a 6-digit code on WhatsApp to ":"We emailed a 6-digit code to ")+(j.to||j.mail)+". It works for 10 minutes.";$("otp").focus();return}
+var e=j&&j.error;m.textContent=e==="limit"?"Too many codes were requested. Please try again in an hour or message Shubham on WhatsApp.":e==="nomail"?"We could not send a code for this booking. Please message Shubham on WhatsApp.":e==="notfound"?"No booking found. Check the ref and the number you booked with.":"The login service is not ready. Please try again in a minute, or message Shubham on WhatsApp."},
+function(){m.textContent="Could not reach the booking system. Please try again."})}
 function find(){var ref=$("ref").value.trim().toUpperCase(),ph=$("ph").value.replace(/\D/g,"").slice(-10),m=$("fmsg");
 if(!ref||ph.length<10){m.textContent="Enter your booking ref and 10-digit WhatsApp number.";return}
 if(!BACKEND_URL){m.textContent="The booking system is not connected yet. Please message Shubham on WhatsApp.";return}
-m.textContent="Searching...";
-getJ("?action=lookup&ref="+encodeURIComponent(ref)+"&phone="+ph,function(j){
-if(!j||!j.ok){m.textContent="No booking found. Check the ref and the number you booked with.";return}
-ST={b:j.booking,p:j.pays,reviewed:j.reviewed,phone:ph,done:!!j.completed,note:j.note||"",rzp:!!j.rzp};m.textContent="";try{sessionStorage.setItem("cust",JSON.stringify({ref:ref,ph:ph}))}catch(e){}draw()},
-function(){m.textContent="Could not reach the booking system. Please try again."})}
+var sv=null;try{sv=JSON.parse(sessionStorage.getItem("cust")||"null")}catch(e){}
+if(sv&&sv.tok&&sv.ref===ref&&sv.ph===ph){TOK=sv.tok;m.textContent="Opening...";lookupNow(ref,ph,function(ok){if(!ok){TOK="";sendCode(ref,ph)}});return}
+sendCode(ref,ph)}
+$("otpgo").addEventListener("click",function(){if(!PEND)return;var c=$("otp").value.replace(/\D/g,""),om=$("omsg");if(c.length!==6){om.textContent="Enter the 6-digit code.";return}
+var b=$("otpgo");b.disabled=true;om.textContent="Checking...";
+postR({action:"c_verify",ref:PEND.ref,phone:PEND.ph,otp:c},function(j){b.disabled=false;
+if(j&&j.ok){TOK=j.token;lookupNow(PEND.ref,PEND.ph,function(ok){if(!ok)om.textContent="Could not open the booking. Please try again."});return}
+om.textContent=j&&j.error==="expired"?"This code expired. Tap Send a new code.":"That code is not right. Please check the code and try again."},
+function(){b.disabled=false;om.textContent="Could not reach the booking system. Please try again."})});
+$("otpre").addEventListener("click",function(){if(PEND)sendCode(PEND.ref,PEND.ph)});
+$("otp").addEventListener("keydown",function(e){if(e.key==="Enter")$("otpgo").click()});
 $("go").addEventListener("click",find);
 if(window.self!==window.top)$("back").hidden=true;
 try{var u=new URLSearchParams(location.search),hp=new URLSearchParams(location.hash.slice(1)),sv=JSON.parse(sessionStorage.getItem("cust")||"null"),r0=hp.get("ref")||u.get("ref"),p0=hp.get("ph");
 if(r0)$("ref").value=r0;else if(sv)$("ref").value=sv.ref;if(p0)$("ph").value=p0;else if(sv)$("ph").value=sv.ph;
-if($("ref").value&&$("ph").value)find()}catch(e){}
+if($("ref").value&&$("ph").value&&sv&&sv.tok)find()}catch(e){}
 
 function money(){var b=ST.b,c=0,w=0;ST.p.forEach(function(p){if(p.status==="Confirmed")c+=p.amount;else if(p.status==="Pending")w+=p.amount});return{c:c,w:w,bal:b.total?Math.max(0,b.total-c-w):null}}
 
@@ -189,7 +213,7 @@ if(b.status!=="Cancelled")v.appendChild(payCard(m));
 v.appendChild(methodsCard());
 if(b.status!=="Cancelled")v.appendChild(rateCard());
 v.appendChild(signOut())}
-function signOut(){var so=E("button",null,"Sign out");so.type="button";so.addEventListener("click",function(){try{sessionStorage.removeItem("cust");sessionStorage.removeItem("pay_"+(ST.b&&ST.b.ref))}catch(e){}ST={b:null,p:[],reviewed:false,phone:""};$("view").hidden=true;$("view").innerHTML="";$("ref").value="";$("ph").value="";$("fmsg").textContent="You are signed out."});return so}
+function signOut(){var so=E("button",null,"Sign out");so.type="button";so.addEventListener("click",function(){try{sessionStorage.removeItem("cust");sessionStorage.removeItem("pay_"+(ST.b&&ST.b.ref))}catch(e){}TOK="";ST={b:null,p:[],reviewed:false,phone:""};$("view").hidden=true;$("view").innerHTML="";$("ref").value="";$("ph").value="";$("fmsg").textContent="You are signed out."});return so}
 
 /* ---- everything paid: a thank-you, nothing else is kept for the customer ---- */
 function checkSvg(){var d=E("div","check");d.innerHTML='<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><path d="M28 52l16 16 30-34"/></svg>';return d}
