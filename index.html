@@ -16,9 +16,30 @@ success:function(){vib([30,40,30,40,90]);tone(523,.14,"sine",.05,0);tone(659,.14
 warn:function(){vib([70,40,70]);tone(240,.2,"sawtooth",.035,0);tone(190,.25,"sawtooth",.035,.18)},
 on:function(){return on},set:function(v){on=!!v;try{localStorage.setItem("sb_fx",on?"on":"off")}catch(e){}if(on)api.tick()}};return api})();
 document.addEventListener("click",function(e){var t=e.target.closest&&e.target.closest("button,a,summary,.chip,[role=button],select");if(t&&!t.disabled)SFX.tick()},true);
-
-</script>
-<meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Shubham Bankar | Cinematographer</title>
+    
+    <!-- तुमचा जावास्क्रिप्ट कोड इथे टाका -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var tbForm = document.getElementById("tb-form");
+        if (tbForm) {
+            tbForm.addEventListener("submit", function(e) {
+                e.preventDefault();
+                var ref = document.getElementById("tb-ref").value.trim();
+                var ph = document.getElementById("tb-ph").value.trim();
+                if (!ref || !ph) {
+                    alert("Please enter both booking reference and WhatsApp number.");
+                    return;
+                }
+                window.location.href = "customer.html?ref=" + encodeURIComponent(ref) + "&ph=" + encodeURIComponent(ph);
+            });
+        }
+    });
+    </script>
+</head>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Shubham Bankar | Cinematographer</title>
 <meta name="description" content="Shubham Bankar (Photowala Shubham): wedding, pre-wedding and event photography and cinematography in Vaijapur, Chhatrapati Sambhajinagar, Maharashtra. Check dates and book your slot online.">
