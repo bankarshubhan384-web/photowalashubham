@@ -5,20 +5,9 @@
 <script>/* send any plain http visit to https */(function(){var h=location.hostname;if(location.protocol==="http:"&&h!=="localhost"&&h!=="127.0.0.1"){location.replace("https:"+location.href.substring(location.protocol.length))}})();</script>
 <script>
 /* theme + sound and vibration (shared by every page) */
-(function(){try{document.documentElement.dataset.theme=localStorage.getItem("sb_theme")||"red"}catch(e){document.documentElement.dataset.theme="red"}})();
-var SFX=(function(){var ctx=null,on=true;try{on=localStorage.getItem("sb_fx")!=="off"}catch(e){}
-function ac(){if(!ctx){try{ctx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(ctx&&ctx.state==="suspended"){try{ctx.resume()}catch(e){}}return ctx}
-function tone(f,d,t,v,delay){var c=on&&ac();if(!c)return;try{var o=c.createOscillator(),g=c.createGain(),t0=c.currentTime+(delay||0);o.type=t||"sine";o.frequency.setValueAtTime(f,t0);g.gain.setValueAtTime(v||.04,t0);g.gain.exponentialRampToValueAtTime(.0001,t0+d);o.connect(g);g.connect(c.destination);o.start(t0);o.stop(t0+d+.02)}catch(e){}}
-function vib(p){if(on&&navigator.vibrate&&!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)){try{navigator.vibrate(p)}catch(e){}}}
-var api={tick:function(){vib(8);tone(560,.06,"triangle",.03)},soft:function(){vib(5);tone(900,.025,"square",.012)},ding:function(){vib(20);tone(880,.2,"sine",.04)},
-success:function(){vib([30,40,30,40,90]);tone(523,.14,"sine",.05,0);tone(659,.14,"sine",.05,.12);tone(784,.3,"sine",.05,.24)},
-warn:function(){vib([70,40,70]);tone(240,.2,"sawtooth",.035,0);tone(190,.25,"sawtooth",.035,.18)},
-on:function(){return on},set:function(v){on=!!v;try{localStorage.setItem("sb_fx",on?"on":"off")}catch(e){}if(on)api.tick()}};return api})();
-document.addEventListener("click",function(e){var t=e.target.closest&&e.target.closest("button,a,summary,.chip,[role=button],select");if(t&&!t.disabled)SFX.tick()},true);
-<script>
-/* sound and vibration (shared by every page) */
+/* theme + sound and vibration (shared by every page) */
 (function(){try{document.documentElement.dataset.theme=localStorage.getItem("sb_theme")||"red"}catch(e){}})();
-var SFX={function(){var ctx=null,on=true;try{on=localStorage.getItem("sb_fx")!=="off"}catch(e){}
+var SFX=(function(){var ctx=null,on=true;try{on=localStorage.getItem("sb_fx")!=="off"}catch(e){}
 function ac(){if(!ctx){try{ctx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(ctx&&ctx.state==="suspended"){try{ctx.resume()}catch(e){}}return ctx}
 function tone(f,d,t,v,delay){var c=on&&ac();if(!c)return;try{var o=c.createOscillator(),g=c.createGain(),t0=c.currentTime+(delay||0);o.type=t||"sine";o.frequency.setValueAtTime(f,t0);g.gain.setValueAtTime(v,t0);o.connect(g);g.connect(c.destination);o.start(t0);o.stop(t0+d)}catch(e){}}
 function vib(p){if(on&&navigator.vibrate&&!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)){try{navigator.vibrate(p)}catch(e){}}}
@@ -41,6 +30,8 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+</script>
+</head>
 </script>
 </head>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
