@@ -1357,6 +1357,6 @@ if(c0){try{apply(JSON.parse(c0))}catch(e){}}
 try{fetch(API+"?action=site").then(function(r){return r.json()}).then(function(j){if(!j||!j.ok||!j.site)return;var n=JSON.stringify(j.site);if(n===c0)return;try{localStorage.setItem(CK,n)}catch(e){}apply(j.site)}).catch(function(){})}catch(e){}
 if("serviceWorker" in navigator)navigator.serviceWorker.register("/sw.js");
 })();
-</script>
+</script>                                                                                                          
 </body>
 </html>
