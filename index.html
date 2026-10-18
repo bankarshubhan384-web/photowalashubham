@@ -843,8 +843,7 @@ document.querySelectorAll("section").forEach(function(s){s.classList.add("reveal
    Live sync only works when this page is hosted on your own site (not inside claude.ai). */
 var GOOGLE_CALENDAR_ID="702620f166e1b5f7c776d0ef6aa126d8179a390a7ca89a44c956243222104761@group.calendar.google.com",GOOGLE_API_KEY="AIzaSyApwC3b94aEHALNhYnaQH3Bo80G8atevTg",BOOKED_DATES=[];
 /* BACKEND_URL: the Web app URL from booking-backend/SETUP-GUIDE.md (ends with /exec). Leave empty to run without it. */
-var BACKEND_URL="https://script.google.com/macros/s/AKfycbyRVsEC8gBr2D3bb1H3A97jyJWwLPWk_xsBV-iLHtynErfNGRF_bYfTnYUYjLUpTxvz8g/exec";
-/* Address of your live site. Used for the Customer login button when this page is viewed somewhere the booking system is not connected. */
+var BACKEND_URL="https://script.google.com/macros/s/AKfycbxXNrdOEukr3DTFgxChkx6QWHOapC0OfDMQzKQdkuY8-14aEOKPYVz4fU_Zb_Zq8tiLcw/exec";/* Address of your live site. Used for the Customer login button when this page is viewed somewhere the booking system is not connected. */
 var LIVE_SITE="https://photowalashubham.pages.dev";
 function tokFor(r){try{var b=JSON.parse(localStorage.getItem("sb_booking")||"null");return b&&b.tok&&String(b.ref).toUpperCase()===String(r).toUpperCase()?b.tok:""}catch(e){return ""}}
 function getJ(q,cb,err){var mr=/[?&]ref=([^&]+)/.exec(q),tk=mr?tokFor(decodeURIComponent(mr[1])):"";if(tk)q+="&token="+encodeURIComponent(tk);fetch(BACKEND_URL+q).then(function(r){return r.json()}).then(cb).catch(err||function(){})}
