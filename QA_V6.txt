@@ -1,7 +1,0 @@
-V6 page sizes (bytes):
-index.html: 569593
-customer.html: 68203
-website.html: 36646
-owner.html: 80780
-
-Checks: embedded styles/runtime scripts for index, customer, website; owner is inline already; local assets changed to relative; API and media routes remain rooted.
