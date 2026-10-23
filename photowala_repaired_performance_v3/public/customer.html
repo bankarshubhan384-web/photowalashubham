@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+/* theme + sound and vibration (shared by every page) */
+(function(){var allowed=["amber","red","teal","ocean","lavender","forest"];try{var saved=localStorage.getItem("sb_theme");document.documentElement.dataset.theme=allowed.indexOf(saved)!==-1?saved:"amber"}catch(e){document.documentElement.dataset.theme="amber"}})();
+var SFX=(function(){var ctx=null,on=true;try{on=localStorage.getItem("sb_fx")!=="off"}catch(e){}
+function ac(){if(!ctx){try{ctx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(ctx&&ctx.state==="suspended"){try{ctx.resume()}catch(e){}}return ctx}
+function tone(f,d,t,v,delay){var c=on&&ac();if(!c)return;try{var o=c.createOscillator(),g=c.createGain(),t0=c.currentTime+(delay||0);o.type=t||"sine";o.frequency.setValueAtTime(f,t0);g.gain.setValueAtTime(v||.04,t0);g.gain.exponentialRampToValueAtTime(.0001,t0+d);o.connect(g);g.connect(c.destination);o.start(t0);o.stop(t0+d+.02)}catch(e){}}
+function vib(p){if(on&&navigator.vibrate&&!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)){try{navigator.vibrate(p)}catch(e){}}}
+var api={tick:function(){vib(8);tone(560,.06,"triangle",.03)},soft:function(){vib(5);tone(900,.025,"square",.012)},ding:function(){vib(20);tone(880,.2,"sine",.04)},
+success:function(){vib([30,40,30,40,90]);tone(523,.14,"sine",.05,0);tone(659,.14,"sine",.05,.12);tone(784,.3,"sine",.05,.24)},
+warn:function(){vib([70,40,70]);tone(240,.2,"sawtooth",.035,0);tone(190,.25,"sawtooth",.035,.18)},
+on:function(){return on},set:function(v){on=!!v;try{localStorage.setItem("sb_fx",on?"on":"off")}catch(e){}if(on)api.tick()}};return api})();
+document.addEventListener("click",function(e){var t=e.target.closest&&e.target.closest("button,a,summary,.chip,[role=button],select");if(t&&!t.disabled)SFX.tick()},true);
+
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>My booking | Photowala Shubham</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=20261023-pws-app-icon-v4"/>
+<link rel="stylesheet" href="/assets/customer-v3.css">
+
+
+
+
+
+
+
+
+<script defer src="/assets/customer-runtime-v3.js"></script>
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=20261023-pws-app-icon-v4">
+</head>
+<body>
+<div class="wrap">
+<div class="topnav" id="back"><a class="brand" href="index.html" aria-label="Photowala Shubham home"><img src="/assets/brand-wordmark.webp?v=20261022-shubham-logo" alt="SHUBHAM logo" width="120" height="23"><span class="brand-owner-name">Shubham Bankar</span></a><div><a href="index.html">Home</a><a href="index.html#work">Films</a><a href="index.html#packages">Packages</a><a href="index.html#booking">Book a shoot</a><a class="act" href="customer.html">My booking</a></div><div class="th"><select id="th" aria-label="Website colour theme"><option value="amber">Amber</option><option value="red">Rose</option><option value="teal">Teal</option><option value="ocean">Ocean</option><option value="lavender">Lavender</option><option value="forest">Forest</option></select><button type="button" id="fxb" aria-label="Sound and vibration"></button></div></div>
+<main class="auth-layout" aria-label="Customer login">
+<section class="auth-stage" id="auth-stage">
+  <div class="auth-light-field" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="auth-glass-card">
+    <div class="auth-card-topline"><span class="auth-eyebrow"><i class="auth-pulse"></i> PHOTOWALA SHUBHAM · CLIENT PORTAL</span><span class="auth-step">01 / MY BOOKING</span></div>
+    <div class="auth-title-wrap">
+      <h1>Welcome <em>back.</em></h1>
+      <p class="auth-welcome">Sign in to your booking</p>
+      <p class="auth-description">See your booking, payment status and review — all in one place.</p>
+    </div>
+    <div class="card auth-form-card" id="find">
+      <label>Booking reference<input id="ref" placeholder="For example SB2610101234" autocapitalize="characters" autocomplete="off"></label>
+      <label>WhatsApp number<input id="ph" type="tel" inputmode="numeric" autocomplete="tel" placeholder="Your 10-digit number"></label>
+      <button class="pri auth-submit" id="go">Find my booking <span aria-hidden="true">↗</span></button>
+      <p class="mute auth-secure-note">&#128274; Secure login. We email a one-time code to the Gmail on your booking.</p>
+      <p id="fmsg" class="mute auth-message" role="status" aria-live="polite"></p>
+      <div id="otpbox" hidden>
+        <div class="auth-otp-intro"><span class="auth-otp-symbol" aria-hidden="true">✦</span><div><b>Verify it's you</b><small>Enter the 6-digit code sent to your email.</small></div></div>
+        <label>6-digit verification code<input id="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="123456"></label>
+        <div class="auth-otp-actions"><button class="pri" id="otpgo">Verify and open my booking</button> <button type="button" id="otpre">Send a new code</button></div>
+        <p id="otpx"><button type="button" id="otpmail" hidden>Open Gmail</button> <button type="button" id="otppaste">Paste code</button></p>
+        <p id="omsg" class="mute auth-message" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+    <p class="auth-assist">Need help finding your booking? <a href="https://api.whatsapp.com/send?phone=919284423297&amp;text=Hello%20Shubham%2C%20I%20need%20help%20with%20my%20booking%20login." target="_blank" rel="noopener">Contact Shubham <span aria-hidden="true">↗</span></a></p>
+  </div>
+  <div class="auth-stage-foot" aria-hidden="true"><span>STORIES TOLD IN LIGHT</span><i></i><span>PHOTOWALA SHUBHAM · CLIENT SPACE</span></div>
+</section>
+<div id="view" hidden></div>
+</main>
+</div>
+
+
+</body>
+</html>
