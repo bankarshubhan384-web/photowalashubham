@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+/* theme + sound and vibration (shared by every page) */
+(function(){try{document.documentElement.dataset.theme=localStorage.getItem("sb_theme")||"red"}catch(e){document.documentElement.dataset.theme="red"}})();
+var SFX=(function(){var ctx=null,on=true;try{on=localStorage.getItem("sb_fx")!=="off"}catch(e){}
+function ac(){if(!ctx){try{ctx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(ctx&&ctx.state==="suspended"){try{ctx.resume()}catch(e){}}return ctx}
+function tone(f,d,t,v,delay){var c=on&&ac();if(!c)return;try{var o=c.createOscillator(),g=c.createGain(),t0=c.currentTime+(delay||0);o.type=t||"sine";o.frequency.setValueAtTime(f,t0);g.gain.setValueAtTime(v||.04,t0);g.gain.exponentialRampToValueAtTime(.0001,t0+d);o.connect(g);g.connect(c.destination);o.start(t0);o.stop(t0+d+.02)}catch(e){}}
+function vib(p){if(on&&navigator.vibrate&&!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)){try{navigator.vibrate(p)}catch(e){}}}
+var api={tick:function(){vib(8);tone(560,.06,"triangle",.03)},soft:function(){vib(5);tone(900,.025,"square",.012)},ding:function(){vib(20);tone(880,.2,"sine",.04)},
+success:function(){vib([30,40,30,40,90]);tone(523,.14,"sine",.05,0);tone(659,.14,"sine",.05,.12);tone(784,.3,"sine",.05,.24)},
+warn:function(){vib([70,40,70]);tone(240,.2,"sawtooth",.035,0);tone(190,.25,"sawtooth",.035,.18)},
+on:function(){return on},set:function(v){on=!!v;try{localStorage.setItem("sb_fx",on?"on":"off")}catch(e){}if(on)api.tick()}};return api})();
+document.addEventListener("click",function(e){var t=e.target.closest&&e.target.closest("button,a,summary,.chip,[role=button],select");if(t&&!t.disabled)SFX.tick()},true);
+
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#111111">
+<title>Owner | Shubham Bankar</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+CjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZ29sZCIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI0Y2RDU4QSIvPjxzdG9wIG9mZnNldD0iLjUiIHN0b3AtY29sb3I9IiNFOEEzMTciLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNCMDdEMkIiLz48L2xpbmVhckdyYWRpZW50Pgo8bGluZWFyR3JhZGllbnQgaWQ9ImcwIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjRjZENThBIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjQzk4QzFFIi8+PC9saW5lYXJHcmFkaWVudD4KPGxpbmVhckdyYWRpZW50IGlkPSJnMSIgeDE9IjEiIHkxPSIwIiB4Mj0iMCIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI0U4QTMxNyIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzlBNkExRSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9Ijk2IiBmaWxsPSIjMTIyMDJGIi8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI5MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2dvbGQpIiBzdHJva2Utd2lkdGg9IjUiLz4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI2NiIgZmlsbD0iIzBCMTYyMiIgc3Ryb2tlPSJ1cmwoI2dvbGQpIiBzdHJva2Utd2lkdGg9IjIiLz4KPHBhdGggZD0iTTEwMC4wLDM4LjAgTDE1My43LDY5LjAgTDEyMy45LDk3LjkgTDExMC4xLDc4LjIgWiIgZmlsbD0idXJsKCNnMCkiIHN0cm9rZT0iIzEyMjAyRiIgc3Ryb2tlLXdpZHRoPSIxLjYiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNMTUzLjcsNjkuMCBMMTUzLjcsMTMxLjAgTDExMy44LDExOS43IEwxMjMuOSw5Ny45IFoiIGZpbGw9InVybCgjZzEpIiBzdHJva2U9IiMxMjIwMkYiIHN0cm9rZS13aWR0aD0iMS42IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTE1My43LDEzMS4wIEwxMDAuMCwxNjIuMCBMODkuOSwxMjEuOCBMMTEzLjgsMTE5LjcgWiIgZmlsbD0idXJsKCNnMCkiIHN0cm9rZT0iIzEyMjAyRiIgc3Ryb2tlLXdpZHRoPSIxLjYiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNMTAwLjAsMTYyLjAgTDQ2LjMsMTMxLjAgTDc2LjEsMTAyLjEgTDg5LjksMTIxLjggWiIgZmlsbD0idXJsKCNnMSkiIHN0cm9rZT0iIzEyMjAyRiIgc3Ryb2tlLXdpZHRoPSIxLjYiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNNDYuMywxMzEuMCBMNDYuMyw2OS4wIEw4Ni4yLDgwLjMgTDc2LjEsMTAyLjEgWiIgZmlsbD0idXJsKCNnMCkiIHN0cm9rZT0iIzEyMjAyRiIgc3Ryb2tlLXdpZHRoPSIxLjYiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNNDYuMyw2OS4wIEwxMDAuMCwzOC4wIEwxMTAuMSw3OC4yIEw4Ni4yLDgwLjMgWiIgZmlsbD0idXJsKCNnMSkiIHN0cm9rZT0iIzEyMjAyRiIgc3Ryb2tlLXdpZHRoPSIxLjYiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSIxOSIgZmlsbD0iIzBCMTYyMiIgc3Ryb2tlPSJ1cmwoI2dvbGQpIiBzdHJva2Utd2lkdGg9IjIiLz4KPHBhdGggZD0iTTk0LDkwIEwxMTIsMTAwIEw5NCwxMTAgWiIgZmlsbD0idXJsKCNnb2xkKSIvPgo8Y2lyY2xlIGN4PSIxNTAiIGN5PSI0OCIgcj0iNC41IiBmaWxsPSIjRjZENThBIiBvcGFjaXR5PSIuOSIvPjwvc3ZnPg==">
+<style>
+:root{--bg:#10162A;--card:rgba(255,255,255,.07);--line:rgba(241,233,216,.18);--ink:#F1E9D8;--mute:#A9A99F;--gold:#E8A317;--on-gold:#10162A;--field:rgba(255,255,255,.06);--glow1:rgba(232,163,23,.18);--glow2:rgba(80,100,220,.22);--cs:dark;--ok:#22C55E;--bad:#EF4444;--warn:#FBBF24;
+--serif:"Cormorant Garamond",Georgia,serif;--sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+:root[data-theme="red"]{--bg:#0A0608;--card:rgba(255,255,255,.055);--line:rgba(255,190,198,.2);--ink:#F8EEEE;--mute:#BDA7AB;--gold:#E23B52;--on-gold:#fff;--field:rgba(255,255,255,.06);--glow1:rgba(200,20,60,.3);--glow2:rgba(120,8,20,.32);--cs:dark}
+:root[data-theme="light"]{--bg:#F5EFE2;--card:rgba(255,255,255,.72);--line:rgba(27,32,56,.16);--ink:#1B2038;--mute:#5E5F63;--gold:#B2740A;--on-gold:#fff;--field:rgba(255,255,255,.85);--glow1:rgba(232,163,23,.25);--glow2:rgba(194,65,12,.14);--cs:light}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(60% 40% at 10% 0%,var(--glow1),transparent 70%),radial-gradient(50% 40% at 100% 20%,var(--glow2),transparent 70%),var(--bg);background-attachment:fixed;color:var(--ink);font:400 16px/1.5 var(--sans);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+h1,h2,h3{font-family:var(--serif);font-weight:600;margin:0}
+.wrap{max-width:900px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:14px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%;color-scheme:var(--cs)}
+select option{background:var(--bg);color:var(--ink)}
+label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute)}
+button,.btn{font:600 14px var(--sans);border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);padding:9px 16px;cursor:pointer;text-decoration:none;display:inline-block;transition:transform .25s,border-color .25s,box-shadow .25s}
+button:hover,.btn:hover{transform:translateY(-2px);border-color:var(--gold)}
+.pri{background:var(--gold);color:var(--on-gold);border-color:var(--gold)}
+:root[data-theme="red"] .pri,:root[data-theme="red"] .tile[aria-pressed="true"]{background:linear-gradient(135deg,#E23B52,#7F0F22);border-color:transparent;color:#fff}.ok{background:var(--ok);color:#052e14;border-color:var(--ok)}.no{color:#ffb4b4;border-color:rgba(239,68,68,.6)}
+.grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.tabs button[aria-pressed="true"]{background:var(--gold);color:var(--on-gold);border-color:var(--gold)}
+.badge{font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--mute)}
+.b-Confirmed{color:var(--ok);border-color:rgba(34,197,94,.6)}.b-Pending{color:var(--warn);border-color:rgba(251,191,36,.6)}.b-Cancelled,.b-Rejected{color:var(--bad);border-color:rgba(239,68,68,.6)}
+.mute{color:var(--mute);font-size:14px}.big{font:600 22px var(--serif)}
+.pay{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+.stat{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));margin:10px 0}.stat div{padding:8px 12px;border:1px solid var(--line);border-radius:14px}.stat b{display:block;font:600 20px var(--serif);color:var(--gold)}
+#msg{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 12px);z-index:9;padding:12px 16px;border-radius:16px;background:#171F3A;border:1px solid var(--gold);display:none}
+a{color:var(--gold)}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.card{animation:rise .6s cubic-bezier(.22,1,.36,1) backwards}
+.topnav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 18px;margin-bottom:12px;border:1px solid var(--line);border-radius:999px;background:var(--card);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}.topnav .brand{font:600 22px var(--serif)}.topnav div{display:flex;gap:6px 16px;font-size:14px}.topnav a{text-decoration:none;color:var(--mute)}.topnav a:hover{color:var(--gold)}
+#tabs{display:none}
+.tiles{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:12px 0}
+.tile{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:14px;border-radius:20px;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);min-height:96px}
+.tile .ti{font-size:24px;line-height:1}.tile b{font:600 17px var(--serif)}.tile small{color:var(--mute);font-size:12.5px}
+.tile[aria-pressed="true"]{background:var(--gold);color:var(--on-gold);border-color:var(--gold)}.tile[aria-pressed="true"] small{color:inherit;opacity:.85}.tile.alert{box-shadow:0 0 0 2px var(--bad)}
+.bars{display:flex;align-items:flex-end;gap:3px;height:130px;margin:10px 0 4px}.bars i{flex:1;background:linear-gradient(to top,var(--gold),transparent);border-radius:4px 4px 0 0;min-height:3px;opacity:.9}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.cal .h{font-size:12px;color:var(--mute);text-align:center;padding:4px 0}
+.cal .d{min-height:78px;padding:4px;border:1px solid var(--line);border-radius:10px;font-size:12px;cursor:pointer;display:flex;flex-direction:column;gap:2px;overflow:hidden;background:transparent;text-align:left;color:var(--ink);transform:none}
+.cal .d:hover{transform:none}.cal .d.today{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}.cal .d.sel{background:color-mix(in srgb,var(--gold) 18%,transparent)}.cal .d.out{opacity:.4}
+.cal .d b{font-size:12px;font-weight:600}.cal .ev{font-size:10.5px;padding:1px 4px;border-radius:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}.ev.c{background:#15803D}.ev.p{background:#B45309}.ev.b{background:#6B7280}
+.ret{padding:10px 12px;border-radius:14px;margin:8px 0;font-size:14px}.ret.bad{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.55)}.ret.ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.4)}
+.th{display:flex;gap:6px;align-items:center}.th select,.th button{font:500 13px var(--sans);padding:6px 10px;border-radius:999px;background:var(--field);color:var(--ink);border:1px solid var(--line);width:auto}
+.shw{overflow:auto;max-height:68vh;border:1px solid var(--line);border-radius:12px}.sht{border-collapse:collapse;font-size:12.5px;min-width:100%}.sht th,.sht td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap;max-width:260px;overflow:hidden;text-overflow:ellipsis}.sht a{color:var(--gold);font-weight:600}.sht th{position:sticky;top:0;background:var(--bg);color:var(--ink);z-index:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="topnav"><span class="row" style="gap:8px"><img class="owner-wordmark" src="/assets/brand-wordmark.webp" alt="PHOTOWALA SHUBHAM" style="width:164px;height:auto;max-height:40px;object-fit:contain"></span><div><a href="https://photowalashubham.shubhambankar96214.workers.dev/" target="_blank" rel="noopener">View website</a><a href="https://photowalashubhamowner.shubhambankar96214.workers.dev/customer.html" target="_blank" rel="noopener">Customer page</a><a href="/website.html">Edit website</a></div></div>
+<div id="login" class="card" style="max-width:420px;margin:12vh auto 0">
+<h1>Owner login</h1>
+<p class="mute">Only Shubham can open this page. Enter your private owner password.</p>
+<label>Owner password<input id="key" type="password" autocomplete="current-password"></label>
+<p id="otpx" hidden><button type="button" id="gmailopen">Open Gmail</button> <button type="button" id="otppaste">Paste code</button></p>
+<label id="otpl" hidden>6-digit code we sent you<input id="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="123456"></label>
+<label style="flex-direction:row;align-items:center;gap:8px;margin-top:10px"><input id="keep" type="checkbox" style="width:auto" checked> Keep me signed in on this device for 30 days</label>
+<p style="margin-top:12px"><button class="pri" id="go">Send me a code</button></p>
+<p class="mute" style="font-size:12.5px">&#128274; Protected by your password and a one-time code.</p>
+<p class="mute" id="lerr"></p>
+</div>
+
+<div id="app" hidden>
+<div class="row" style="justify-content:space-between;margin-bottom:6px"><div class="row" style="gap:10px"><img class="logo-wordmark" src="/assets/brand-wordmark.webp" alt="PHOTOWALA SHUBHAM" style="width:132px;height:auto;max-height:34px;object-fit:contain;background:transparent;border-radius:0;box-shadow:none"><h1>Owner dashboard</h1></div><div class="row"><button id="notif">Enable alerts</button><button id="refresh">Refresh</button><button id="lnk" title="Copy a private link that opens this dashboard without a password">One-tap link</button><button id="out">Sign out</button></div></div>
+<div class="stat" id="stat"></div>
+<div class="tiles" id="tiles"></div>
+<div id="verbar" hidden style="background:#8a5a00;color:#fff;padding:9px 12px;border-radius:8px;font:13px/1.45 system-ui,sans-serif;margin:8px 0"></div>
+<div id="dbg" hidden style="position:fixed;left:8px;right:8px;bottom:8px;z-index:99;background:#7a1010;color:#fff;font:12px monospace;padding:8px 10px;border-radius:8px;max-height:30vh;overflow:auto"></div>
+<div class="tabs" id="tabs" role="tablist">
+<button data-t="check" aria-pressed="true">Needs my check</button><button data-t="insights" aria-pressed="false">Insights</button><button data-t="cal" aria-pressed="false">Calendar</button><button data-t="bookings" aria-pressed="false">All bookings</button><button data-t="new" aria-pressed="false">Add or block</button><button data-t="paid" aria-pressed="false">Payments done</button><button data-t="done" aria-pressed="false">Customers done</button><button data-t="qr" aria-pressed="false">Payment QR and divider</button><button data-t="reviews" aria-pressed="false">Reviews</button><button data-t="sheet" aria-pressed="false">Google Sheet</button>
+</div>
+<div id="v-check"></div><div id="v-insights" hidden></div><div id="v-cal" hidden></div><div id="v-done" hidden></div><div id="v-bookings" hidden></div><div id="v-new" hidden></div><div id="v-paid" hidden></div><div id="v-qr" hidden></div><div id="v-reviews" hidden></div><div id="v-sheet" hidden></div>
+</div>
+</div>
+<div id="msg" role="status"></div>
+
+<script>
+/* Paste your Apps Script Web app URL here (ends with /exec). */
+var BACKEND_URL="/api/booking";
+var $=function(i){return document.getElementById(i)},D={bookings:[],payments:[],reviews:[]},KEY="",filter="All";
+function E(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function A(p){for(var i=1;i<arguments.length;i++)if(arguments[i])p.appendChild(arguments[i]);return p}
+function inr(n){return "\u20B9"+(+n||0).toLocaleString("en-IN")}
+function toast(t){SFX.ding();var m=$("msg");m.textContent=t;m.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(function(){m.style.display="none"},3500)}
+function wa(phone,text){return "https://api.whatsapp.com/send?phone=91"+phone+"&text="+encodeURIComponent(text)}
+function fd(s){try{return new Date(s+"T00:00:00").toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short",year:"numeric"})}catch(e){return s}}
+function api(action,data,cb){if(!BACKEND_URL){toast("BACKEND_URL is empty. Paste your Web app URL in owner.html.");return}
+var o=data||{};o.action=action;o.token=KEY;
+fetch(BACKEND_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(o)}).then(function(r){return r.json()}).then(function(j){
+if(j&&j.error==="auth"){out();$("lerr").textContent="Your session ended. Please sign in again.";return}
+cb(j)}).catch(function(){toast("Could not reach the booking system. Check your internet.")})}
+function load(cb){api("o_list",{},function(j){if(!j||!j.ok){toast("Could not load data"+(j&&(j.detail||j.error)?" ("+(j.detail||j.error)+")":"")+".");return}D=j;$("login").hidden=true;$("app").hidden=false;draw();alertNew();if(cb)cb()})}
+function out(){var t=KEY;KEY="";try{sessionStorage.removeItem("otk");localStorage.removeItem("otk");sessionStorage.removeItem("ok");localStorage.removeItem("ok")}catch(e){}if(t&&BACKEND_URL){try{fetch(BACKEND_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"o_logout",token:t})})}catch(e){}}$("app").hidden=true;$("login").hidden=false;resetLogin()}
+var STEP=0;
+function resetLogin(){STEP=0;$("otpl").hidden=true;$("otpx").hidden=true;$("otp").value="";$("go").textContent="Send me a code"}
+function post0(x,cb){fetch(BACKEND_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(x)}).then(function(r){return r.json()}).then(cb).catch(function(){$("go").disabled=false;$("lerr").textContent="Could not reach the booking system. Check your internet."})}
+$("go").addEventListener("click",function(){var pw=$("key").value,le=$("lerr"),b=$("go");if(!pw)return;le.textContent="";b.disabled=true;
+if(STEP===0){post0({action:"o_login",key:pw},function(j){b.disabled=false;if(j&&j.ok){STEP=1;$("otpl").hidden=false;$("otpx").hidden=false;$("otp").focus();b.textContent="Verify and sign in";le.textContent="A 6-digit code was emailed to "+(j.to||j.mail)+". It works for 10 minutes. Check your Inbox and Spam."}else le.textContent=j&&j.error==="locked"?"Too many wrong tries. Please wait 15 minutes.":j&&j.error==="send"?"Could not send the code. Check the email settings in the script (daily email limit?).":"Wrong password."});return}
+var c=$("otp").value.replace(/\D/g,"");if(c.length!==6){b.disabled=false;le.textContent="Enter the 6-digit code.";return}
+post0({action:"o_verify",key:pw,otp:c},function(j){b.disabled=false;if(j&&j.ok){KEY=j.token;try{($("keep").checked?localStorage:sessionStorage).setItem("otk",KEY)}catch(e){}$("key").value="";$("otp").value="";le.textContent="";load();return}
+le.textContent=j&&j.error==="locked"?"Too many wrong tries. Please wait 15 minutes.":"That code is wrong or expired. Tap the button to get a new code.";if(!(j&&j.error==="locked"))resetLogin()})});
+$("otp").addEventListener("keydown",function(e){if(e.key==="Enter")$("go").click()});
+$("otp").addEventListener("input",function(){var v=this.value.replace(/\D/g,"").slice(0,6);this.value=v;if(v.length===6)$("go").click()});
+var GW2=false;
+function clipCode(){if(!navigator.clipboard||!navigator.clipboard.readText){$("lerr").textContent="Please paste the code into the box.";return}
+navigator.clipboard.readText().then(function(t){var m=/(?:^|\D)(\d{6})(?:\D|$)/.exec(t||"");if(m){GW2=false;$("otp").value=m[1];$("go").click()}else $("lerr").textContent="No 6-digit code found. Copy the code from your email first."}).catch(function(){$("lerr").textContent="Please paste the code into the box."})}
+$("otppaste").addEventListener("click",clipCode);
+$("gmailopen").addEventListener("click",function(){GW2=true;window.open("https://mail.google.com/mail/u/0/#search/"+encodeURIComponent('subject:"login code" newer_than:1h'),"_blank","noopener")});
+window.addEventListener("focus",function(){if(GW2)clipCode()});
+$("key").addEventListener("keydown",function(e){if(e.key==="Enter")$("go").click()});
+$("out").addEventListener("click",out);$("refresh").addEventListener("click",function(){load(function(){toast("Updated")})});
+$("tabs").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;[].forEach.call($("tabs").children,function(x){x.setAttribute("aria-pressed",String(x===b));var pn=$("v-"+x.dataset.t);if(pn)pn.hidden=x!==b});if(b.dataset.t==="sheet")loadSheet();if(typeof D!=="undefined"&&D&&$("tiles"))renderTiles()});
+setInterval(function(){var a=document.activeElement;if(KEY&&!$("app").hidden&&!document.hidden&&!(a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName)))load()},150000);
+$("lnk").hidden=true;
+try{localStorage.removeItem("ok");sessionStorage.removeItem("ok");if(location.hash.indexOf("k=")>-1)history.replaceState(null,"",location.pathname+location.search);KEY=sessionStorage.getItem("otk")||localStorage.getItem("otk")||"";if(KEY)load()}catch(e){}
+
+function autoUnpaid(){return D.bookings.filter(function(b){return b.status==="Confirmed"&&String(b.source).indexOf("Website")===0&&!D.payments.some(function(p){return p.ref===b.ref&&p.status==="Confirmed"})})}
+function alertNew(){var pend=D.bookings.filter(function(b){return b.status==="Pending"}),seen=[];document.title=(pend.length?"("+pend.length+") ":"")+"Owner | Shubham Bankar";
+try{seen=JSON.parse(localStorage.getItem("sb_seen")||"null")}catch(e){}
+var fresh=seen?pend.filter(function(b){return seen.indexOf(b.ref)<0}):[];
+try{localStorage.setItem("sb_seen",JSON.stringify(pend.map(function(b){return b.ref})))}catch(e){}
+var au=autoUnpaid().map(function(b){return b.ref}),seen2=null;try{seen2=JSON.parse(localStorage.getItem("sb_seen2")||"null")}catch(e){}
+var fresh2=seen2?autoUnpaid().filter(function(b){return seen2.indexOf(b.ref)<0}):[];try{localStorage.setItem("sb_seen2",JSON.stringify(au))}catch(e){}
+if(fresh2.length){toast(fresh2.length+" slot"+(fresh2.length>1?"s":"")+" booked automatically");if(window.Notification&&Notification.permission==="granted"){fresh2.forEach(function(b){try{new Notification("Slot booked automatically",{body:b.name+", "+fd(b.date)+" ("+b.slot+")"})}catch(e){}})}}
+if(fresh.length){toast(fresh.length+" new date"+(fresh.length>1?"s":"")+" pending your confirmation");
+if(window.Notification&&Notification.permission==="granted"){fresh.forEach(function(b){try{new Notification("Date pending your confirmation",{body:b.name+", "+fd(b.date)+" ("+b.slot+")"})}catch(e){}})}}}
+$("notif").addEventListener("click",function(){if(!window.Notification){toast("This browser does not support alerts. You still get an email for every request.");return}
+Notification.requestPermission().then(function(r){toast(r==="granted"?"Alerts are on while this page is open. You always get an email too.":"Alerts are blocked. You still get an email for every request.")})});
+/* Minimal QR code generator (byte mode, error correction M). Returns an array of rows of booleans. */
+function qrMatrix(text){
+var s=unescape(encodeURIComponent(text)),bytes=[],i,j,k;for(i=0;i<s.length;i++)bytes.push(s.charCodeAt(i));
+var ECC=[-1,10,16,26,18,24,16,18,22,22,26,30,22,22,24,24,28,28,26,26,26,26,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28],
+BLK=[-1,1,1,1,2,2,4,4,4,5,5,5,8,9,9,10,10,11,13,14,16,17,17,18,20,21,23,25,26,28,29,31,33,35,37,38,40,43,45,47,49];
+function raw(v){var r=(16*v+128)*v+64;if(v>=2){var n=Math.floor(v/7)+2;r-=(25*n-10)*n-55;if(v>=7)r-=36}return r}
+function dcw(v){return Math.floor(raw(v)/8)-ECC[v]*BLK[v]}
+var ver;for(ver=1;ver<=40;ver++){if(4+(ver<10?8:16)+bytes.length*8<=dcw(ver)*8)break}
+if(ver>40)throw new Error("QR text too long");
+var bits=[];function put(v,n){for(var q=n-1;q>=0;q--)bits.push((v>>>q)&1)}
+put(4,4);put(bytes.length,ver<10?8:16);bytes.forEach(function(b){put(b,8)});
+var cap=dcw(ver)*8;put(0,Math.min(4,cap-bits.length));put(0,(8-bits.length%8)%8);
+for(var pd=0xEC;bits.length<cap;pd^=0xEC^0x11)put(pd,8);
+var data=[];for(i=0;i<bits.length;i+=8){var bt=0;for(k=0;k<8;k++)bt=bt<<1|bits[i+k];data.push(bt)}
+function mul(x,y){var z=0;for(var q=7;q>=0;q--){z=(z<<1)^((z>>>7)*0x11D);z^=((y>>>q)&1)*x}return z}
+function div(deg){var r=[];for(var q=0;q<deg;q++)r.push(0);r[deg-1]=1;var root=1;for(var a=0;a<deg;a++){for(var b=0;b<deg;b++){r[b]=mul(r[b],root);if(b+1<deg)r[b]^=r[b+1]}root=mul(root,2)}return r}
+function rem(d,dv){var r=dv.map(function(){return 0});d.forEach(function(b){var f=b^r.shift();r.push(0);dv.forEach(function(c,q){r[q]^=mul(c,f)})});return r}
+var nb=BLK[ver],el=ECC[ver],rc=Math.floor(raw(ver)/8),ns=nb-rc%nb,sl=Math.floor(rc/nb),dv=div(el),blocks=[],kk=0;
+for(i=0;i<nb;i++){var dat=data.slice(kk,kk+sl-el+(i<ns?0:1));kk+=dat.length;var ec=rem(dat,dv);if(i<ns)dat.push(0);blocks.push(dat.concat(ec))}
+var all=[];for(i=0;i<blocks[0].length;i++)for(j=0;j<blocks.length;j++)if(i!==sl-el||j>=ns)all.push(blocks[j][i]);
+var size=ver*4+17,M=[],F=[];for(i=0;i<size;i++){M.push(new Array(size).fill(false));F.push(new Array(size).fill(false))}
+function sf(x,y,d){if(x>=0&&x<size&&y>=0&&y<size){M[y][x]=d;F[y][x]=true}}
+for(i=0;i<size;i++){sf(6,i,i%2===0);sf(i,6,i%2===0)}
+function finder(x,y){for(var dy=-4;dy<=4;dy++)for(var dx=-4;dx<=4;dx++){var d=Math.max(Math.abs(dx),Math.abs(dy));sf(x+dx,y+dy,d!==2&&d!==4)}}
+finder(3,3);finder(size-4,3);finder(3,size-4);
+var pos=[];if(ver>1){var na=Math.floor(ver/7)+2,step=ver===32?26:Math.ceil((ver*4+4)/(na*2-2))*2;pos=[6];for(var p=size-7;pos.length<na;p-=step)pos.splice(1,0,p)}
+for(i=0;i<pos.length;i++)for(j=0;j<pos.length;j++){if((i===0&&j===0)||(i===0&&j===pos.length-1)||(i===pos.length-1&&j===0))continue;for(var dy=-2;dy<=2;dy++)for(var dx=-2;dx<=2;dx++)sf(pos[i]+dx,pos[j]+dy,Math.max(Math.abs(dx),Math.abs(dy))!==1)}
+function fmt(mask){var d=mask,r=d;for(var q=0;q<10;q++)r=(r<<1)^((r>>>9)*0x537);var b=(d<<10|r)^0x5412;function g(q){return((b>>>q)&1)!==0}
+for(var q=0;q<=5;q++)sf(8,q,g(q));sf(8,7,g(6));sf(8,8,g(7));sf(7,8,g(8));for(q=9;q<15;q++)sf(14-q,8,g(q));
+for(q=0;q<8;q++)sf(size-1-q,8,g(q));for(q=8;q<15;q++)sf(8,size-15+q,g(q));sf(8,size-8,true)}
+fmt(0);
+if(ver>=7){var r2=ver;for(i=0;i<12;i++)r2=(r2<<1)^((r2>>>11)*0x1F25);var vb=ver<<12|r2;for(i=0;i<18;i++){var bit=((vb>>>i)&1)!==0,a=size-11+i%3,b2=Math.floor(i/3);sf(a,b2,bit);sf(b2,a,bit)}}
+i=0;for(var right=size-1;right>=1;right-=2){if(right===6)right=5;for(var vert=0;vert<size;vert++)for(j=0;j<2;j++){var x=right-j,up=((right+1)&2)===0,y=up?size-1-vert:vert;if(!F[y][x]&&i<all.length*8){M[y][x]=((all[i>>>3]>>>(7-(i&7)))&1)!==0;i++}}}
+function mask(m){for(var y=0;y<size;y++)for(var x=0;x<size;x++){var inv;switch(m){case 0:inv=(x+y)%2===0;break;case 1:inv=y%2===0;break;case 2:inv=x%3===0;break;case 3:inv=(x+y)%3===0;break;case 4:inv=(Math.floor(x/3)+Math.floor(y/2))%2===0;break;case 5:inv=x*y%2+x*y%3===0;break;case 6:inv=(x*y%2+x*y%3)%2===0;break;default:inv=((x+y)%2+x*y%3)%2===0}if(!F[y][x]&&inv)M[y][x]=!M[y][x]}}
+function pen(){var sc=0,y,x,run,c;
+for(y=0;y<size;y++){run=1;for(x=1;x<size;x++){if(M[y][x]===M[y][x-1])run++;else{if(run>=5)sc+=run-2;run=1}}if(run>=5)sc+=run-2}
+for(x=0;x<size;x++){run=1;for(y=1;y<size;y++){if(M[y][x]===M[y-1][x])run++;else{if(run>=5)sc+=run-2;run=1}}if(run>=5)sc+=run-2}
+for(y=0;y<size-1;y++)for(x=0;x<size-1;x++){c=M[y][x];if(c===M[y][x+1]&&c===M[y+1][x]&&c===M[y+1][x+1])sc+=3}
+var P1=[1,0,1,1,1,0,1,0,0,0,0],P2=[0,0,0,0,1,0,1,1,1,0,1];
+function mt(get,n,len){var cnt=0;for(var s0=0;s0+11<=len;s0++){var a=true,b=true;for(var q=0;q<11;q++){var v=get(s0+q)?1:0;if(v!==P1[q])a=false;if(v!==P2[q])b=false}if(a)cnt++;if(b)cnt++}return cnt}
+for(y=0;y<size;y++)sc+=40*mt(function(q){return M[y][q]},0,size);
+for(x=0;x<size;x++)sc+=40*mt(function(q){return M[q][x]},0,size);
+var dark=0;for(y=0;y<size;y++)for(x=0;x<size;x++)if(M[y][x])dark++;var kx=Math.ceil(Math.abs(dark*20-size*size*10)/(size*size))-1;sc+=Math.max(0,kx)*10;return sc}
+var best=0,bs=1e9;for(var m=0;m<8;m++){mask(m);fmt(m);var ps=pen();if(ps<bs){bs=ps;best=m}mask(m)}
+mask(best);fmt(best);return M}
+function qrDataUrl(text,scale){var m=qrMatrix(text),n=m.length,s=scale||6,c=document.createElement("canvas");c.width=c.height=(n+8)*s;var x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.fillStyle="#000";
+for(var y=0;y<n;y++)for(var q=0;q<n;q++)if(m[y][q])x.fillRect((q+4)*s,(y+4)*s,s,s);return c.toDataURL("image/png")}
+
+var UPI={id:"9284423297@axl",name:"SHUBHAM DNYANESHWAR BANKAR"},GP={id:"shubhambankar96214@okhdfcbank",name:"Shubham Bankar",aid:"uGICAgMDwicO-JA"},STG=["Advance (50%)","Shoot day (25%)","Delivery day (25%)","Custom amount"];
+function planOf(b){if(b.plan&&b.plan.length===3&&(b.plan[0]+b.plan[1]+b.plan[2])===(+b.total||0))return b.plan.map(Number);if(!(+b.advance>0)&&b.pct&&b.pct.length===3&&(+b.total)){var a0=Math.round(b.total*b.pct[0]/100),c0=b.pct[2]===0?b.total-a0:Math.round(b.total*b.pct[1]/100);return[a0,c0,b.total-a0-c0]}var t=+b.total||0,a=+b.advance||0,p=a>0?a:Math.round(t*.5);if(!t)return[p,0,0];var q=Math.round((t-p)/2);return[p,q,t-p-q]}
+function dlB64(b64,name){try{var bin=atob(b64),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);var url=URL.createObjectURL(new Blob([u],{type:"application/pdf"})),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){a.remove();URL.revokeObjectURL(url)},5000)}catch(e){}}
+function payIdx(p){return D.payments.filter(function(x){return x.ref===p.ref}).sort(function(a,b){return a.row-b.row}).map(function(x){return x.row}).indexOf(p.row)}
+function ownerPdf(ref,kind,n,btn){var t=btn.textContent;btn.disabled=true;btn.textContent="Preparing...";api("o_pdf",{ref:ref,kind:kind,n:n},function(j){btn.disabled=false;btn.textContent=t;if(j&&j.ok)dlB64(j.b64,j.name);else toast("Could not make the PDF.")})}
+function upiLink(a,ref,label,g){var q="&am="+(+a).toFixed(2)+"&cu=INR&tn="+encodeURIComponent((ref+" "+label.split(" ")[0]).slice(0,40));return g?"upi://pay?pa="+GP.id+"&pn="+encodeURIComponent(GP.name)+q+"&aid="+GP.aid:"upi://pay?pa="+UPI.id+"&pn="+encodeURIComponent(UPI.name)+q+"&mc=0000&mode=02&purpose=00"}
+function qrList(){var d=$("q-list");if(!d)return;d.innerHTML="";D.bookings.forEach(function(b){var o=document.createElement("option");o.value=b.ref;o.label=b.name+" "+b.date;d.appendChild(o)})}
+function goQr(ref){var t=[].filter.call($("tabs").children,function(x){return x.dataset.t==="qr"})[0];t.click();$("q-ref").value=ref;$("q-ref").dispatchEvent(new Event("input"));window.scrollTo({top:0,behavior:"smooth"})}
+function custLink(ref){return location.origin+location.pathname.replace(/[^\/]*$/,"")+"customer.html#ref="+ref}
+function paidTab(){var v=$("v-paid");v.innerHTML="";var done=D.payments.filter(function(p){return p.status==="Confirmed"}).sort(function(a,b){return b.row-a.row}),mo=new Date().toISOString().slice(0,7);
+var sum=done.reduce(function(s,p){return s+p.amount},0),sm=done.filter(function(p){return String(p.time).slice(0,7)===mo}).reduce(function(s,p){return s+p.amount},0),wt=D.payments.filter(function(p){return p.status==="Pending"}).length;
+v.appendChild(E("h2",null,"Payments done"));var st=E("div","stat");[["Total received",inr(sum)],["This month",inr(sm)],["Payments done",done.length],["Waiting for you",wt]].forEach(function(x){var d=E("div");A(d,E("b",null,x[1]),E("span","mute",x[0]));st.appendChild(d)});v.appendChild(st);
+if(!done.length)v.appendChild(E("p","mute","No confirmed payments yet."));
+done.forEach(function(p){var b=byRef(p.ref)||{},c=E("div","card"),t=E("div","row");A(t,E("span","big",inr(p.amount)),E("span","badge b-Confirmed","Paid"),E("span","badge",p.label));c.appendChild(t);
+c.appendChild(E("p",null,(b.name||"Booking")+(b.date?" | "+fd(b.date):"")+" | Ref "+p.ref));
+c.appendChild(E("p","mute","UTR "+p.utr+(p.time?" | submitted "+new Date(p.time).toLocaleString("en-IN"):"")+(p.emailed?" | email: "+p.emailed:"")));
+var r=E("div","row"),pb=E("button",null,"Receipt PDF");pb.addEventListener("click",function(){ownerPdf(p.ref,"payment",payIdx(p),pb)});r.appendChild(pb);
+if(p.wa){var w=E("a","btn","WhatsApp the customer");w.href=p.wa;w.target="_blank";w.rel="noopener";r.appendChild(w)}c.appendChild(r);v.appendChild(c)})}
+function buildQr(){var v=$("v-qr");v.innerHTML="";var c=E("div","card");
+A(c,E("h2",null,"Custom payment QR"),E("p","mute","The customer sent you their booking ref? Type it here, check the amount, and send them a QR with that exact amount. It uses your UPI ID, so the money comes straight to you."));
+var g=E("div","grid"),ref=E("input");ref.id="q-ref";ref.setAttribute("list","q-list");ref.placeholder="For example SB2610101234";ref.autocapitalize="characters";var dl=E("datalist");dl.id="q-list";var l1=E("label",null,"Customer booking ref");A(l1,ref,dl);
+var st=E("select");st.id="q-stage";STG.forEach(function(s,i){var op=E("option",null,s);op.value=i+1;st.appendChild(op)});var l2=E("label",null,"Which payment");l2.appendChild(st);
+var tot=E("input");tot.id="q-total";tot.type="number";tot.min="0";tot.placeholder="Total price";var l3=E("label",null,"Total price (INR)");l3.appendChild(tot);
+var amt=E("input");amt.id="q-amt";amt.type="number";amt.min="1";amt.placeholder="Amount to pay now";var l4=E("label",null,"Amount to pay now (INR)");l4.appendChild(amt);
+var kind=E("select");kind.id="q-kind";[["p","PhonePe / any UPI app"],["g","Google Pay"]].forEach(function(x){var op=E("option",null,x[1]);op.value=x[0];kind.appendChild(op)});var l6=E("label",null,"QR shown for");l6.appendChild(kind);
+A(g,l1,l2,l3,l4,l6);c.appendChild(g);var info=E("p","mute");info.id="q-info";c.appendChild(info);
+var row=E("div","row");row.style.margin="10px 0";var gen=E("button","pri","Show QR"),send=E("button","ok","Send QR to customer"),dlb=E("button",null,"Download QR image"),cpl=E("button",null,"Copy customer link");A(row,gen,send,dlb,cpl);c.appendChild(row);
+var img=E("img");img.id="q-img";img.alt="Payment QR code";img.style.cssText="display:none;width:min(300px,100%);background:#fff;padding:12px;border-radius:20px;margin:6px auto";var cap=E("p","big");cap.id="q-cap";cap.style.textAlign="center";
+var wl=E("a","btn","Open the WhatsApp message");wl.id="q-wa";wl.hidden=true;wl.target="_blank";wl.rel="noopener";wl.style.cssText="display:block;width:fit-content;margin:8px auto";A(c,img,cap,wl);v.appendChild(c);
+var touched=false;
+function bk(){var r=ref.value.trim().toUpperCase();return D.bookings.filter(function(b){return b.ref===r})[0]}
+function nextStage(b){var used={};D.payments.forEach(function(p){if(p.ref===b.ref&&p.status!=="Rejected")used[p.stage]=1});return[1,2,3].filter(function(x){return!used[x]})[0]||4}
+function calc(){if(touched)return;var b=bk(),s=+st.value,pl=planOf({total:+tot.value||0,advance:b?b.advance:0,plan:b?b.plan:null,pct:b?b.pct:null});amt.value=s<=3?(pl[s-1]||""):""}
+ref.addEventListener("input",function(){var b=bk();touched=false;if(b){info.textContent=b.name+" | "+fd(b.date)+" | "+b.slot+(b.time?" from "+b.time:"")+" | "+b.type+" | "+b.status;tot.value=b.total||"";st.value=nextStage(b);[0,1,2].forEach(function(i){st.options[i].text=(b.labels&&b.labels[i])||STG[i]});calc();fillDv(b)}else info.textContent=ref.value.trim()?"No booking with this ref.":""});
+st.addEventListener("change",function(){touched=false;calc()});tot.addEventListener("input",function(){touched=false;calc();if(typeof dt!=="undefined"&&dt){dt.value=tot.value;split(PRE[0][1])}});amt.addEventListener("input",function(){touched=true});
+function make(){var b=bk(),a=Math.round(+amt.value);if(!b){toast("Enter a valid booking ref first.");return null}if(!(a>0)){toast("Enter the amount to pay now.");return null}var lab=st.options[st.selectedIndex].text;return{b:b,ref:b.ref,amount:a,label:lab,link:upiLink(a,b.ref,lab,kind.value==="g")}}
+function show(){var o=make();if(!o)return null;img.src=qrDataUrl(o.link,8);img.style.display="block";cap.textContent=inr(o.amount)+" ("+o.label+") | "+(kind.value==="g"?"Google Pay":"PhonePe / any UPI app");return o}
+gen.addEventListener("click",show);kind.addEventListener("change",function(){if(img.style.display!=="none")show()});
+send.addEventListener("click",function(){var o=show();if(!o)return;send.disabled=true;api("o_payreq",{ref:o.ref,stage:+st.value,amount:o.amount,total:+tot.value||0},function(j){send.disabled=false;if(j&&j.ok){
+var msg="Hello "+o.b.name+", please pay "+inr(o.amount)+" ("+o.label+") for your booking "+o.ref+". Please open your customer login page: "+custLink(o.ref).split("#")[0]+" , log in with your booking ref "+o.ref+" and this mobile number, choose your payment and scan your personal QR with the exact amount. The QR is valid for 30 minutes after you open it. - Shubham Bankar",u="https://api.whatsapp.com/send?phone=91"+o.b.phone+"&text="+encodeURIComponent(msg);
+wl.href=u;wl.hidden=false;try{window.open(u,"_blank")}catch(e){}toast("QR saved. The customer's page now shows it"+(j.emailed?", and the QR PDF was emailed to them.":". Tap the green button to WhatsApp them."));load()}else toast("Could not save. Check the details.")})});
+dlb.addEventListener("click",function(){var o=show();if(!o)return;var a=document.createElement("a");a.href=img.src;a.download="payment-qr-"+o.ref+".png";document.body.appendChild(a);a.click();a.remove()});
+cpl.addEventListener("click",function(){var o=make();if(!o)return;var u=custLink(o.ref);try{navigator.clipboard.writeText(u).then(function(){toast("Customer link copied.")},function(){prompt("Copy this link:",u)})}catch(e){prompt("Copy this link:",u)}});
+/* ---- payment divider: split the total into 2 or 3 payments, edit the amounts, save to the booking ---- */
+var c2=E("div","card");A(c2,E("h2",null,"Payment divider"),E("p","mute","Type the total, choose a plan, and edit any amount. Use Apply to save the plan on the booking above (type its ref first). Customers then see exactly these amounts."));
+var dg=E("div","grid"),dt=E("input");dt.id="dv-total";dt.type="number";dt.min="0";dt.placeholder="Total";var ld=E("label",null,"Total package (INR)");ld.appendChild(dt);dg.appendChild(ld);
+var da=[1,2,3].map(function(n){var i=E("input");i.type="number";i.min="0";i.id="dv"+n;var l=E("label",null,["1st payment","2nd payment","3rd payment (0 = none)"][n-1]);l.appendChild(i);dg.appendChild(l);return i});c2.appendChild(dg);
+var pr=E("div","tabs"),PRE=[["50 / 25 / 25",[.5,.25,.25]],["50 / 50 (2 payments)",[.5,.5,0]],["30 / 50 / 20",[.3,.5,.2]]],sm=E("p","mute");sm.id="dv-sum";
+function split(r){var t=Math.round(+dt.value)||0,x=Math.round(t*r[0]),y=Math.round(t*r[1]);da[0].value=t?x:"";da[1].value=t?y:"";da[2].value=t?t-x-y:"";sum()}
+function sum(){var t=Math.round(+dt.value)||0,s=da.reduce(function(a,i){return a+(+i.value||0)},0);sm.textContent=t?(s===t?"Total matches: "+inr(s):"Amounts add up to "+inr(s)+" but the total is "+inr(t)+"."):"Type the total first."}
+PRE.forEach(function(p){var b=E("button",null,p[0]);b.type="button";b.addEventListener("click",function(){split(p[1])});pr.appendChild(b)});
+dt.addEventListener("input",function(){split(PRE[0][1])});da.forEach(function(i){i.addEventListener("input",sum)});
+var ap=E("button","pri","Apply plan to this booking");ap.addEventListener("click",function(){var b=bk(),t=Math.round(+dt.value)||0,a=da.map(function(i){return Math.round(+i.value)||0});if(!b){toast("Type the booking ref in the QR box above first.");return}if(!t||a[0]+a[1]+a[2]!==t){toast("The three amounts must add up to the total.");return}if(!(a[0]>0)){toast("The 1st payment must be more than 0.");return}
+api("o_set_booking",{row:b.row,fields:{total:t,plan:a}},function(j){if(j&&j.ok){toast("Plan saved: "+a.filter(function(x){return x>0}).map(inr).join(" + "));tot.value=t;touched=false;load(function(){calc()})}else toast("Could not save the plan.")})});
+A(c2,pr,sm,ap);v.appendChild(c2);
+window.fillDv=function(b){dt.value=b.total||"";var pl=planOf(b);da[0].value=pl[0]||"";da[1].value=pl[1]||"";da[2].value=pl[2]||"";sum()}}
+
+/* ---- cards, insights, calendar, customers done, theme ---- */
+var PUBCAL="702620f166e1b5f7c776d0ef6aa126d8179a390a7ca89a44c956243222104761@group.calendar.google.com",INS=null;
+function planText(b){if(b.plan&&b.plan.length===3)return b.plan.filter(function(x){return x>0}).map(inr).join(" + ");if(b.pct&&b.pct.length===3)return b.pct.filter(function(x){return x>0}).map(function(x){return x+"%"}).join(" + ")+" (chosen by the customer)";return "left for you to decide"}
+function isoDay(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function overdue(){var t=isoDay(new Date());return D.bookings.filter(function(b){return b.doneAt&&b.retain&&b.retain<=t})}
+var TL=[["check","\uD83D\uDD14","Needs my check"],["insights","\uD83D\uDCCA","Insights"],["cal","\uD83D\uDCC5","Calendar"],["bookings","\uD83D\uDCD2","All bookings"],["paid","\uD83D\uDCB0","Payments done"],["done","\uD83D\uDE4F","Customers done"],["qr","\u25A6","Payment QR and divider"],["new","\u2795","Add or block"],["reviews","\u2B50","Reviews"],["sheet","\uD83D\uDCC4","Google Sheet"]];
+var SH=null,SHT="Bookings",SHQ="";
+function loadSheet(){var v=$("v-sheet");if(!SH){v.innerHTML="";A(v,E("h2",null,"Google Sheet"),E("p","mute","Loading your sheet..."))}
+api("o_sheet",{},function(j){if(!j||!j.ok){v.innerHTML="";A(v,E("h2",null,"Google Sheet"),E("p","mute","Could not load the sheet"+(j&&(j.detail||j.error)?" ("+(j.detail||j.error)+")":"")+". Tap Refresh to try again."));return}SH=j;paintSheet();renderTiles()})}
+function csvCell(x){x=String(x==null?"":x);if(/^[=+\-@\t\r]/.test(x))x="'"+x;return '"'+x.replace(/"/g,'""')+'"'}
+function paintSheet(){var v=$("v-sheet");if(!SH)return;v.innerHTML="";A(v,E("h2",null,"Google Sheet (live copy)"));
+var card=E("div","card");
+A(card,E("p","mute",'A read-only copy of your Google Sheet "'+SH.name+'". New bookings show here as soon as they are saved. Showing the newest 300 rows of each tab.'));
+function cur(){return SH.tabs.filter(function(t){return t.name===SHT})[0]||SH.tabs[0]}
+var bar=E("div","tabs");
+SH.tabs.forEach(function(t){var b=E("button",null,t.name+" ("+t.total+")");b.type="button";b.setAttribute("aria-pressed",String(t.name===SHT));b.addEventListener("click",function(){SHT=t.name;paintSheet()});bar.appendChild(b)});
+var tools=E("div","tabs");
+var ob=E("button",null,"Open in Google Sheets");ob.type="button";ob.addEventListener("click",function(){window.open(SH.url,"_blank","noopener")});
+var rb=E("button",null,"Refresh");rb.type="button";rb.addEventListener("click",function(){loadSheet()});
+var cb=E("button",null,"Download CSV");cb.type="button";cb.addEventListener("click",function(){var t=cur(),lines=[t.head].concat(t.rows).map(function(r){return r.map(csvCell).join(",")}),a=document.createElement("a");a.href=URL.createObjectURL(new Blob([lines.join("\n")],{type:"text/csv"}));a.download=t.name+".csv";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)});
+A(tools,ob,rb,cb);
+var q=E("input");q.type="search";q.placeholder="Search this tab (name, phone, ref, date...)";q.value=SHQ;q.setAttribute("aria-label","Search the sheet");q.style.cssText="width:100%;margin:8px 0";
+var info=E("p","mute"),wrap=E("div","shw");
+function drawTable(){var t=cur(),ql=SHQ.trim().toLowerCase();wrap.innerHTML="";
+var rows=ql?t.rows.filter(function(r){return r.join(" ").toLowerCase().indexOf(ql)>-1}):t.rows;
+var tb=E("table","sht"),th=E("thead"),hr=E("tr");t.head.forEach(function(h){hr.appendChild(E("th",null,h))});th.appendChild(hr);tb.appendChild(th);
+var bd=E("tbody");rows.forEach(function(r){var tr=E("tr");r.forEach(function(c){var td=E("td");td.title=c;if(/^https:\/\/(drive|docs)\.google\.com\//.test(c)){var lk=E("a",null,/\/folders\//.test(c)?"Open folder":"Open PDF");lk.href=c;lk.target="_blank";lk.rel="noopener";td.appendChild(lk)}else td.textContent=c;tr.appendChild(td)});bd.appendChild(tr)});tb.appendChild(bd);wrap.appendChild(tb);
+info.textContent=rows.length+" of "+t.rows.length+" rows shown"+(t.total>t.rows.length?" (newest "+t.rows.length+" of "+t.total+" in the sheet)":"")}
+q.addEventListener("input",function(){SHQ=q.value;drawTable()});
+A(card,bar,tools,q,info,wrap);v.appendChild(card);drawTable()}
+function tileInfo(t){var today=isoDay(new Date());
+if(t==="check"){var n=D.payments.filter(function(p){return p.status==="Pending"}).length+D.bookings.filter(function(b){return b.status==="Pending"}).length+autoUnpaid().length;return n?n+" to check":"All clear"}
+if(t==="insights")return INS&&INS.month?INS.month.unique+" visitors this month":"Visitors and money";
+if(t==="cal"){var n=D.bookings.filter(function(b){return b.status==="Confirmed"&&b.date>=today}).length;var nb={};BLK.forEach(function(x){if(x.date>=today)nb[x.date]=1});var bn=Object.keys(nb).length;return n+" upcoming shoot"+(n===1?"":"s")+(bn?", "+bn+" blocked day"+(bn===1?"":"s"):"")}
+if(t==="bookings")return D.bookings.length+(D.bookings.length===1?" booking":" bookings");
+if(t==="paid"){var c=D.payments.filter(function(p){return p.status==="Confirmed"});return c.length+" payments, "+inr(c.reduce(function(s,p){return s+p.amount},0))}
+if(t==="done"){var d=D.bookings.filter(function(b){return b.doneAt}).length,ov=overdue().length;return ov?ov+" need your decision":d+" finished"}
+if(t==="qr")return "Send QR, split payments";if(t==="new")return "Add booking, AI chat reader";
+if(t==="reviews")return D.reviews.filter(function(r){return!r.approved}).length+" to approve";if(t==="sheet")return SH?SH.tabs[0].total+" bookings in sheet":"Live copy of your sheet";return ""}
+function curTab(){var a=[].filter.call($("tabs").children,function(x){return x.getAttribute("aria-pressed")==="true"})[0];return a?a.dataset.t:"check"}
+var EXPECT="2026-10-17 customer-folders + owner-fix";
+function checkBackend(){try{fetch(BACKEND_URL+"?action=version").then(function(r){return r.json()}).then(function(j){var bar=$("verbar");
+if(j&&j.version===EXPECT){bar.hidden=true;return}
+bar.hidden=false;bar.textContent=j&&j.version?"Your booking backend runs version \""+j.version+"\" but this page expects \""+EXPECT+"\". In Apps Script: Deploy > Manage deployments > the pencil > New version > Deploy.":"Your booking backend is running OLDER or DIFFERENT code (it did not report a version). Paste the newest Code_with_map.gs into the Apps Script project that holds your settings, then Deploy > Manage deployments > the pencil > New version > Deploy."}).catch(function(){})}catch(e){}}
+function dbgShow(e){try{var d=document.getElementById("dbg");if(d){d.hidden=false;d.textContent="Page error: "+(e&&e.message||e)}}catch(x){}console.error(e)}
+function renderTiles(){var c=$("tiles");c.innerHTML="";var cur=curTab();TL.forEach(function(x){var al="";try{al=x[0]==="done"&&overdue().length?" alert":""}catch(e1){dbgShow(e1)}var b=E("button","tile"+al);b.type="button";b.setAttribute("aria-pressed",String(x[0]===cur));A(b,E("span","ti",x[1]),E("b",null,x[2]),E("small",null,(function(){try{return tileInfo(x[0])}catch(e2){dbgShow(e2);return ""}})()));
+b.addEventListener("click",function(){$("tabs").querySelector('[data-t="'+x[0]+'"]').click();window.scrollTo({top:c.offsetTop-10,behavior:"smooth"})});c.appendChild(b)});var w=E("button","tile");w.type="button";A(w,E("span","ti","\uD83C\uDF10"),E("b",null,"Edit website"),E("small",null,"Photos, films, prices"));w.addEventListener("click",function(){location.href="/website.html"});c.appendChild(w)}
+function insightsTab(){var v=$("v-insights");if(!INS){v.innerHTML="";A(v,E("h2",null,"Insights"),E("p","mute","Loading..."))}
+api("o_insights",{},function(j){if(!j||!j.ok||!j.month||!j.today||!j.lastMonth||!j.series)return;INS=j;paintInsights();renderTiles()})}
+function paintInsights(){var v=$("v-insights"),j=INS;v.innerHTML="";v.appendChild(E("h2",null,"Insights"));var c=E("div","card");c.appendChild(E("h3",null,"Website visitors"));
+var st=E("div","stat");[["Visitors this month",j.month.unique],["Visitors today",j.today.unique],["Visitors last month",j.lastMonth.unique],["Page visits this month",j.month.views]].forEach(function(x){var d=E("div");A(d,E("b",null,x[1]),E("span","mute",x[0]));st.appendChild(d)});c.appendChild(st);
+var mx=Math.max.apply(null,j.series.map(function(s){return s.n}).concat([1])),bars=E("div","bars");j.series.forEach(function(s){var i=E("i");i.style.height=Math.max(3,Math.round(100*s.n/mx))+"%";i.title=s.d+": "+s.n+" visitors";bars.appendChild(i)});c.appendChild(bars);
+c.appendChild(E("p","mute","Last 30 days, visitors per day. Each visitor is counted once a day, anonymously (a random id, no name, number or IP address). Counting starts the day you upload this version of the site."));v.appendChild(c);
+var c2=E("div","card");c2.appendChild(E("h3",null,"This month"));var s2=E("div","stat");[["Bookings made",j.bookings],["Money received",inr(j.revenue)]].forEach(function(x){var d=E("div");A(d,E("b",null,x[1]),E("span","mute",x[0]));s2.appendChild(d)});c2.appendChild(s2);v.appendChild(c2)}
+var BLK=[];function loadBlocks(){api("o_blocks",{},function(j){if(j&&j.ok){BLK=j.blocks||[];calTab();renderTiles()}})}
+var CAL={y:new Date().getFullYear(),m:new Date().getMonth(),sel:isoDay(new Date())};
+function calTab(){var v=$("v-cal");v.innerHTML="";var c=E("div","card"),hd=E("div","row");hd.style.justifyContent="space-between";
+var pv=E("button",null,"\u2039 Back"),nx=E("button",null,"Next \u203A"),td=E("button",null,"Today"),ti=E("h2",null,new Date(CAL.y,CAL.m,1).toLocaleDateString("en-IN",{month:"long",year:"numeric"}));
+pv.addEventListener("click",function(){CAL.m--;if(CAL.m<0){CAL.m=11;CAL.y--}calTab()});nx.addEventListener("click",function(){CAL.m++;if(CAL.m>11){CAL.m=0;CAL.y++}calTab()});td.addEventListener("click",function(){var n=new Date();CAL.y=n.getFullYear();CAL.m=n.getMonth();CAL.sel=isoDay(n);calTab()});
+A(hd,pv,ti,td,nx);c.appendChild(hd);
+var g=E("div","cal");["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(function(n){g.appendChild(E("div","h",n))});
+var first=new Date(CAL.y,CAL.m,1),start=new Date(CAL.y,CAL.m,1-first.getDay()),today=isoDay(new Date());
+for(var k=0;k<42;k++){var d=new Date(start.getFullYear(),start.getMonth(),start.getDate()+k),ds=isoDay(d),cell=E("button","d"+(d.getMonth()!==CAL.m?" out":"")+(ds===today?" today":"")+(ds===CAL.sel?" sel":""));cell.type="button";cell.appendChild(E("b",null,d.getDate()));
+D.bookings.filter(function(b){return b.date===ds&&b.status!=="Cancelled"}).slice(0,3).forEach(function(b){cell.appendChild(E("span","ev "+(b.status==="Confirmed"?"c":"p"),(b.time||(b.slot==="Day"?"Day":b.slot==="Night"?"Night":"Full"))+" "+String(b.name).split(" ")[0]))});
+BLK.filter(function(x){return x.date===ds}).slice(0,2).forEach(function(x){cell.appendChild(E("span","ev b",x.slot==="Day and Night"?"Blocked":"Blocked "+x.slot))});
+(function(s){cell.addEventListener("click",function(){CAL.sel=s;calTab()})})(ds);g.appendChild(cell)}
+c.appendChild(g);c.appendChild(E("p","mute","Green = confirmed, orange = waiting for you, grey = blocked. Tap a day to see the details."));v.appendChild(c);
+var day=D.bookings.filter(function(b){return b.date===CAL.sel&&b.status!=="Cancelled"}),c2=E("div");c2.appendChild(E("h3",null,fd(CAL.sel)));
+var bl=BLK.filter(function(x){return x.date===CAL.sel});if(!day.length&&!bl.length)c2.appendChild(E("p","mute","No shoots or blocks on this day."));
+bl.forEach(function(x){var k=E("div","card"),r=E("div","row");A(r,E("span","badge","Blocked"),E("b",null,x.slot),E("span","mute",x.title));k.appendChild(r);var u=E("button","no","Unblock this");u.style.marginTop="8px";u.addEventListener("click",function(){if(!confirm("Unblock "+fd(x.date)+" ("+x.slot+")? If this calendar entry covers several days, all of them are removed."))return;api("o_unblock",{id:x.id},function(j){if(j&&j.ok){toast("Unblocked");loadBlocks()}else toast("Could not unblock.")})});k.appendChild(u);c2.appendChild(k)});
+day.forEach(function(b){c2.appendChild(bookCard(b))});v.appendChild(c2);
+var ag=E("div","card");ag.appendChild(E("h3",null,"Next 14 days"));var lim=isoDay(new Date(Date.now()+14*86400000)),up=D.bookings.filter(function(b){return b.date>=today&&b.date<=lim&&b.status!=="Cancelled"}).sort(function(a,b){return a.date<b.date?-1:1});
+if(!up.length)ag.appendChild(E("p","mute","Nothing in the next 14 days."));up.forEach(function(b){ag.appendChild(E("p",null,fd(b.date)+" | "+b.slot+(b.time?" from "+b.time:"")+" | "+b.name+" | "+(b.location||"")+" | "+b.status))});BLK.filter(function(x){return x.date>=today&&x.date<=lim}).forEach(function(x){ag.appendChild(E("p","mute",fd(x.date)+" | "+x.slot+" | Blocked: "+x.title))});v.appendChild(ag);
+var dt=document.createElement("details");dt.className="card";var sm=document.createElement("summary");sm.textContent="Google Calendar view (your public Shoot Bookings calendar)";sm.style.cursor="pointer";dt.appendChild(sm);
+var fr=document.createElement("iframe");fr.title="Google Calendar";fr.loading="lazy";fr.style.cssText="border:0;width:100%;height:480px;margin-top:10px;border-radius:12px;background:#fff";dt.addEventListener("toggle",function(){if(dt.open&&!fr.src)fr.src="https://calendar.google.com/calendar/embed?src="+encodeURIComponent(PUBCAL)+"&ctz=Asia%2FKolkata&showTitle=0&mode=MONTH"});
+dt.appendChild(fr);v.appendChild(dt)}
+function doneTab(){var v=$("v-done");v.innerHTML="";v.appendChild(E("h2",null,"Customers done"));v.appendChild(E("p","mute","When a customer's last payment is confirmed, their name, ref and payment PDFs stay here for 15 days. Then you decide: delete their info or extend it. Nothing is deleted unless you tap Delete."));
+var list=D.bookings.filter(function(b){return b.doneAt}),today=isoDay(new Date()),groups={};
+list.forEach(function(b){var k=String(b.name).toLowerCase()+"|"+b.phone;(groups[k]=groups[k]||[]).push(b)});
+var keys=Object.keys(groups).sort(function(a,b){var x=groups[a].reduce(function(m,t){return t.retain<m?t.retain:m},"9999"),y=groups[b].reduce(function(m,t){return t.retain<m?t.retain:m},"9999");return x<y?-1:1});
+if(!keys.length)v.appendChild(E("p","mute","No finished customers yet. They appear here after their last payment is confirmed."));
+keys.forEach(function(k){var g=groups[k],c=E("div","card"),first=g[0];c.appendChild(E("div","big",first.name));
+g.forEach(function(b){var left=Math.ceil((new Date(b.retain+"T00:00:00")-new Date(today+"T00:00:00"))/86400000),over=left<=0,box=E("div");
+var top=E("div","row");A(top,E("span","badge",b.ref),E("span","mute",fd(b.date)+" | paid in full on "+fd(b.doneAt)));box.appendChild(top);
+box.appendChild(E("div","ret "+(over?"bad":"ok"),over?"The "+15+" days are over. Do you want to delete this customer's info or extend it?":"Kept for "+left+" more day"+(left===1?"":"s")+" (until "+fd(b.retain)+"), then I will ask you."));
+if(b.thanks)box.appendChild(E("p","mute","Thank-you note: "+b.thanks));
+var r=E("div","row"),pf=E("button",null,"Final receipt PDF");pf.addEventListener("click",function(){ownerPdf(b.ref,"final",0,pf)});r.appendChild(pf);
+D.payments.filter(function(p){return p.ref===b.ref&&p.status==="Confirmed"}).forEach(function(p,i){var x=E("button",null,"Receipt "+(i+1)+" PDF");x.addEventListener("click",function(){ownerPdf(p.ref,"payment",payIdx(p),x)});r.appendChild(x)});
+var w=E("a","btn","WhatsApp thank-you");w.target="_blank";w.rel="noopener";w.href=wa(b.phone,"Hello "+b.name+", "+(b.thanks||"thank you for choosing Photowala Shubham.")+" - Shubham Bankar");r.appendChild(w);
+var ex=E("button",null,"Extend 15 days");ex.addEventListener("click",function(){api("o_extend",{row:b.row},function(j){if(j&&j.ok){toast("Extended until "+fd(j.retain));load()}})});
+var de=E("button","no","Delete info now");de.addEventListener("click",function(){if(!confirm("Delete all info for "+b.name+" ("+b.ref+")? This removes the booking, payments and reviews and cannot be undone."))return;api("o_delete_booking",{row:b.row},function(j){if(j&&j.ok){toast("Customer info deleted");load()}})});
+A(r,ex,de);box.appendChild(r);c.appendChild(box)});v.appendChild(c)})}
+(function(){var tn=document.querySelector(".topnav"),w=E("div","th"),s=E("select");s.setAttribute("aria-label","Theme");[["red","Premium Red & Black"],["dark","Classic Gold"],["light","Light"]].forEach(function(t){var op=E("option",null,t[1]);op.value=t[0];s.appendChild(op)});s.value=document.documentElement.dataset.theme||"red";
+s.addEventListener("change",function(){document.documentElement.dataset.theme=s.value;try{localStorage.setItem("sb_theme",s.value)}catch(e){}});
+var f=E("button",null,"");f.type="button";function ff(){f.textContent=SFX.on()?"Sound on":"Sound off"}ff();f.addEventListener("click",function(){SFX.set(!SFX.on());ff()});A(w,s,f);tn.appendChild(w)})();
+function aiCard(){var c=E("div","card");A(c,E("h2",null,"Connections check"),E("p","mute","Check that the AI assistant and online payments are connected to your booking system."));
+var b=E("button","pri","Run check"),out=E("div");b.addEventListener("click",function(){b.disabled=true;out.innerHTML="";api("o_aitest",{},function(j){b.disabled=false;if(!j||!j.ok){out.appendChild(E("p","mute","Could not run the check. Deploy the newest Code.gs first."));return}
+if(typeof j.hasKey==="undefined"){out.appendChild(E("p",null,"Your booking backend answered in an old format, so it is running older code than this page. In Apps Script paste the newest Code_with_map.gs, then Deploy > Manage deployments > the pencil > New version > Deploy."));return}
+[["AI provider",j.provider+" ("+j.model+")"],["AI key found",j.hasKey?"Yes":"No. Add GEMINI_API_KEY in Script properties"],["AI answers",j.works?"Working. Test reply: "+j.sample:(j.hasKey?"Not working. "+(j.error||"Unknown error"):"Not connected")],["Online payments (Razorpay)",j.razorpay?"Connected":"Not connected. Add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in Script properties"]].forEach(function(r){out.appendChild(E("p",null,r[0]+": "+r[1]))})})});A(c,b,out);return c}
+function byRef(ref){return D.bookings.filter(function(b){return b.ref===ref})[0]}
+function sums(b){var ps=D.payments.filter(function(p){return p.ref===b.ref}),c=0,w=0;ps.forEach(function(p){if(p.status==="Confirmed")c+=p.amount;else if(p.status==="Pending")w+=p.amount});return{ps:ps,conf:c,wait:w,bal:b.total?b.total-c:0}}
+function draw(){try{draw0()}catch(e){dbgShow(e);toast("One section could not load. Tap Refresh.")}drawRest()}
+function draw0(){
+var pend=D.payments.filter(function(p){return p.status==="Pending"}),today=new Date().toISOString().slice(0,10);
+var st=$("stat");st.innerHTML="";
+[["Payments to check",pend.length],["Dates pending",D.bookings.filter(function(b){return b.status==="Pending"}).length],["Upcoming confirmed",D.bookings.filter(function(b){return b.status==="Confirmed"&&b.date>=today}).length],["Reviews to approve",D.reviews.filter(function(r){return !r.approved}).length]].forEach(function(x){var d=E("div");A(d,E("b",null,x[1]),E("span","mute",x[0]));st.appendChild(d)});
+// needs check
+var vc=$("v-check");vc.innerHTML="";
+A(vc,E("h2",null,"Payments waiting for you"));
+if(!pend.length)A(vc,E("p","mute","Nothing to check right now."));
+pend.forEach(function(p){var b=byRef(p.ref);if(b)vc.appendChild(payCard(p,b))});
+var np=D.bookings.filter(function(b){return b.status==="Pending"});
+A(vc,E("h2",null,"Dates pending your confirmation"));
+if(!np.length)A(vc,E("p","mute","No dates are waiting for your confirmation."));
+np.forEach(function(b){vc.appendChild(bookCard(b))});
+var ab=autoUnpaid();A(vc,E("h2",null,"Booked automatically, advance not paid yet"));
+if(!ab.length)A(vc,E("p","mute","None right now."));
+ab.forEach(function(b){vc.appendChild(bookCard(b))});
+// all bookings
+var vb=$("v-bookings");vb.innerHTML="";
+var fr=E("div","tabs");["All","Pending","Confirmed","Cancelled","Upcoming"].forEach(function(f){var x=E("button",null,f);x.setAttribute("aria-pressed",String(f===filter));x.addEventListener("click",function(){filter=f;draw();$("v-bookings").hidden=false;$("v-check").hidden=true;[].forEach.call($("tabs").children,function(t){t.setAttribute("aria-pressed",String(t.dataset.t==="bookings"))})});fr.appendChild(x)});
+var q=E("input");q.placeholder="Search name, phone or ref";q.id="q";q.addEventListener("input",function(){drawList(q.value)});
+A(vb,fr,q);var lst=E("div");lst.id="blist";lst.style.marginTop="12px";vb.appendChild(lst);drawList("");
+}
+function drawRest(){[newTab,function(){$("v-new").appendChild(aiCard())},revTab,function(){if(!$("q-ref"))buildQr()},qrList,paidTab,doneTab,calTab,loadBlocks,insightsTab,renderTiles].concat([function(){if(!window.__vc){window.__vc=1;checkBackend()}}]).forEach(function(f){try{f()}catch(e){dbgShow(e)}})}
+function drawList(s){var l=$("blist"),today=new Date().toISOString().slice(0,10);l.innerHTML="";s=(s||"").toLowerCase();
+D.bookings.filter(function(b){return(filter==="All"||(filter==="Upcoming"?b.date>=today&&b.status!=="Cancelled":b.status===filter))&&(!s||(b.name+b.phone+b.ref).toLowerCase().indexOf(s)>=0)}).sort(function(a,b){return a.date<b.date?-1:1}).forEach(function(b){l.appendChild(bookCard(b))});
+if(!l.children.length)l.appendChild(E("p","mute","No bookings here."))}
+function bookCard(b){var s=sums(b),c=E("div","card");
+var top=E("div","row");A(top,E("span","big",b.name),E("span","badge b-"+b.status,b.status),E("span","badge",b.ref),E("span","badge",b.source||"Website"));c.appendChild(top);
+A(c,E("p",null,fd(b.date)+"  |  "+b.slot+(b.time?" from "+b.time:"")+"  |  "+b.type+(b.location?"  |  "+b.location:"")));
+if(b.notes)c.appendChild(E("p","mute","Notes: "+b.notes));
+c.appendChild(E("p","mute","Payment plan: "+planText(b)));
+var contact=E("div","row"),tel=E("a","btn","Call +91 "+b.phone);tel.href="tel:+91"+b.phone;
+var w=E("a","btn","WhatsApp");w.target="_blank";w.rel="noopener";w.href=wa(b.phone,"Hello "+b.name+", this is Shubham Bankar. About your "+b.type+" on "+fd(b.date)+" ("+b.slot+").");
+A(contact,tel,w);if(b.email){var m=E("a","btn","Email");m.href="mailto:"+b.email;contact.appendChild(m)}c.appendChild(contact);
+var ex=E("div","row");ex.style.marginTop="8px";var qb=E("button",null,"Payment QR"),pb=E("button",null,"Booking PDF");qb.addEventListener("click",function(){goQr(b.ref)});pb.addEventListener("click",function(){ownerPdf(b.ref,"booking",0,pb)});var cu=E("button",null,"Open as customer");cu.type="button";cu.addEventListener("click",function(){cu.disabled=true;api("o_cust_link",{ref:b.ref},function(j){cu.disabled=false;if(!j||!j.ok){toast("Could not open the customer view.");return}window.open("https://photowalashubhamowner.shubhambankar96214.workers.dev/customer.html#ref="+encodeURIComponent(j.ref)+"&ph="+j.phone+"&tok="+encodeURIComponent(j.token),"_blank","noopener")})});var fb=E("button",null,"Customer folder");fb.type="button";fb.addEventListener("click",function(){fb.disabled=true;api("o_folder",{ref:b.ref},function(j){fb.disabled=false;if(!j||!j.ok){toast("Could not open the folder"+(j&&(j.detail||j.error)?" ("+(j.detail||j.error)+")":"")+".");return}window.open(j.url,"_blank","noopener")})});A(ex,qb,pb,cu,fb);c.appendChild(ex);
+var sm=E("div","stat");[["Total",b.total?inr(b.total):"not set"],["Received",inr(s.conf)],["Waiting",inr(s.wait)],["Balance",b.total?inr(s.bal):"-"]].forEach(function(x){var d=E("div");A(d,E("b",null,x[1]),E("span","mute",x[0]));sm.appendChild(d)});c.appendChild(sm);
+var ed=E("div","grid"),tot=E("input");tot.type="number";tot.min="0";tot.value=b.total||"";tot.placeholder="Total price";
+var l1=E("label",null,"Total price (INR)");l1.appendChild(tot);
+var sel=E("select");["Pending","Confirmed","Cancelled"].forEach(function(o){var op=E("option",null,o);op.value=o;if(o===b.status)op.selected=true;sel.appendChild(op)});
+var l2=E("label",null,"Booking status");l2.appendChild(sel);var rn=E("input");rn.value=b.reason||"";rn.placeholder="Shown to the customer";var l5=E("label",null,"Note to customer (shown on their page)");l5.appendChild(rn);A(ed,l1,l2,l5);c.appendChild(ed);
+if(b.status==="Pending"){var q=E("div","row");q.style.margin="10px 0 0";var cs=E("button","ok","Confirm slot"),dc=E("button","no","Decline");
+cs.addEventListener("click",function(){cs.disabled=true;api("o_set_booking",{row:b.row,fields:{status:"Confirmed"}},function(j){if(j&&j.ok){toast("Slot confirmed. Calendar updated"+(b.email?" and the customer was emailed.":"."));load()}else{cs.disabled=false;toast("Could not confirm.")}})});
+dc.addEventListener("click",function(){var rs=prompt("Why are you declining? This reason is shown to the customer and printed on their cancelled PDF (you can leave it empty).");if(rs===null)return;api("o_set_booking",{row:b.row,fields:{status:"Cancelled",reason:rs.trim()}},function(j){if(j&&j.ok){toast("Declined. The customer was emailed a cancelled PDF"+(b.email?".":" (they gave no email)."));load()}})});A(q,cs,dc);c.appendChild(q)}
+var sv=E("button","pri","Save changes");sv.style.marginTop="10px";sv.addEventListener("click",function(){var f={};if(+tot.value!==b.total)f.total=+tot.value||0;if(sel.value!==b.status)f.status=sel.value;if(rn.value.trim()!==(b.reason||""))f.reason=rn.value.trim();
+if(f.status==="Cancelled"&&f.reason===undefined&&!b.reason){var r0=prompt("Why is this booking cancelled? (shown to the customer and printed on the PDF, optional)");if(r0===null)return;if(r0.trim())f.reason=r0.trim()}
+if(!Object.keys(f).length){toast("Nothing changed");return}api("o_set_booking",{row:b.row,fields:f},function(j){if(j&&j.ok){toast("Saved. Calendar updated.");load()}else toast("Could not save.")})});c.appendChild(sv);
+var dlb=E("button","no","Delete shoot");dlb.style.cssText="margin:10px 0 0 8px";dlb.addEventListener("click",function(){if(!confirm("Delete the whole shoot for "+b.name+" ("+fd(b.date)+")?\n\nThis also deletes its payments, reviews and calendar events. This cannot be undone."))return;api("o_delete_booking",{row:b.row},function(j){if(j&&j.ok){toast("Shoot deleted");load()}else toast("Could not delete.")})});c.appendChild(dlb);
+s.ps.forEach(function(p){c.appendChild(payRow(p,b))});return c}
+function payRow(p,b){var d=E("div","pay"),t=E("div","row");A(t,E("b",null,p.label+": "+inr(p.amount)),E("span","badge b-"+p.status,p.status),E("span","mute","UTR "+p.utr));var pq=E("button",null,"PDF");pq.addEventListener("click",function(){ownerPdf(p.ref,"payment",payIdx(p),pq)});t.appendChild(pq);d.appendChild(t);
+if(p.status==="Pending"){var am=E("input");am.type="number";am.value=p.amount;am.style.maxWidth="140px";var r=E("div","row");r.style.marginTop="8px";
+var ok=E("button","ok","Confirm payment"),no=E("button","no","Reject");
+ok.addEventListener("click",function(){ok.disabled=true;api("o_set_payment",{row:p.row,status:"Confirmed",amount:+am.value},function(j){if(j&&j.ok){toast("Confirmed. The customer was emailed the PDF and the calendar updated.");load()}else{ok.disabled=false;toast("Could not confirm.")}})});
+no.addEventListener("click",function(){api("o_set_payment",{row:p.row,status:"Rejected"},function(j){if(j&&j.ok){toast("Rejected");load()}})});A(r,E("span","mute","Amount received:"),am,ok,no);d.appendChild(r)}
+else if(p.status==="Confirmed"){var r2=E("div","row");r2.style.marginTop="6px";if(p.wa){var w=E("a","btn","Send WhatsApp confirmation");w.href=p.wa;w.target="_blank";w.rel="noopener";r2.appendChild(w)}r2.appendChild(E("span","mute",p.emailed?"Email: "+p.emailed:""));d.appendChild(r2)}
+return d}
+function payCard(p,b){var c=E("div","card");A(c,E("span","big",b.name+" paid "+inr(p.amount)),E("p","mute",b.ref+"  |  "+fd(b.date)+"  |  "+b.slot));c.appendChild(payRow(p,b));return c}
+function newTab(){var v=$("v-new");v.innerHTML="";
+var c=E("div","card");c.appendChild(E("h2",null,"Add a booking yourself"));c.appendChild(E("p","mute","For bookings that came by phone or in person. It is confirmed straight away and added to your calendar."));
+var f=E("div","grid"),F={};[["name","Client name","text"],["phone","WhatsApp number","tel"],["email","Gmail (optional)","email"],["date","Event date","date"],["time","Start time (optional)","time"],["type","Type of shoot","text"],["location","Venue and city","text"],["total","Total price (INR)","number"],["notes","Notes (deliverables)","text"]].forEach(function(x){var l=E("label",null,x[1]),i=E("input");i.type=x[2];F[x[0]]=i;l.appendChild(i);f.appendChild(l)});
+var sl=E("select");["Day","Night","Day and Night"].forEach(function(o){var op=E("option",null,o);op.value=o;sl.appendChild(op)});var ls=E("label",null,"Event time");ls.appendChild(sl);f.appendChild(ls);c.appendChild(f);
+var b=E("button","pri","Add booking");b.style.marginTop="10px";b.addEventListener("click",function(){var d={slot:sl.value};Object.keys(F).forEach(function(k){d[k]=F[k].value.trim()});
+api("o_manual",d,function(j){if(j&&j.ok){toast("Added: "+j.ref);load()}else toast("Check the name, 10-digit number and date.")})});c.appendChild(b);var ai=E("div","card");A(ai,E("h2",null,"Paste a customer chat"),E("p","mute","Paste a WhatsApp chat in Marathi, Hindi, English or Hinglish. AI reads the name, number, event, date, venue and deliverables and fills the form below. Check it, then tap Add booking."));
+var tx=E("textarea");tx.rows=5;tx.placeholder="Paste the chat here...";var lt=E("label",null,"Customer chat");lt.appendChild(tx);ai.appendChild(lt);
+var ab=E("button","pri","Extract booking details");ab.addEventListener("click",function(){var t=tx.value.trim();if(!t){toast("Paste the chat first.");return}ab.disabled=true;ab.textContent="Reading the chat...";
+api("o_parse",{text:t},function(j){ab.disabled=false;ab.textContent="Extract booking details";if(j&&j.ok){var x=j.data;F.name.value=x.customerName||"";F.phone.value=x.phoneNumber||"";F.type.value=x.eventType||"";F.date.value=x.eventDate||"";F.location.value=x.venue||"";F.notes.value=(x.deliverables||[]).join(", ");toast("Details filled in. Please check them, then tap Add booking.")}else toast(j&&j.error==="noai"?"AI is not set up yet. Add your Gemini key in Apps Script (see the setup guide).":"Could not read the chat. Try again or fill the form yourself.")})});ai.appendChild(ab);v.appendChild(ai);v.appendChild(c);
+var c2=E("div","card");c2.appendChild(E("h2",null,"Block a date or slot"));c2.appendChild(E("p","mute","Marks the slot as Booked on the website calendar (for example when you are busy or away)."));
+var g=E("div","grid"),di=E("input");di.type="date";var l3=E("label",null,"Date");l3.appendChild(di);var s2=E("select");["Day and Night","Day","Night"].forEach(function(o){var op=E("option",null,o);op.value=o;s2.appendChild(op)});var l4=E("label",null,"Slot");l4.appendChild(s2);A(g,l3,l4);c2.appendChild(g);
+var bb=E("button","pri","Block it");bb.style.marginTop="10px";bb.addEventListener("click",function(){if(!di.value){toast("Choose a date");return}api("o_block",{date:di.value,slot:s2.value},function(j){toast(j&&j.ok?"Blocked on the website calendar":"Could not block it")})});c2.appendChild(bb);v.appendChild(c2)}
+function revTab(){var v=$("v-reviews");v.innerHTML="";v.appendChild(E("h2",null,"Customer reviews"));
+if(!D.reviews.length)v.appendChild(E("p","mute","No reviews yet."));
+D.reviews.forEach(function(r){var c=E("div","card"),t=E("div","row");A(t,E("span","big",r.name),E("span","badge",("\u2605".repeat(r.rating))+("\u2606".repeat(5-r.rating))),E("span","badge",r.type),E("span","badge b-"+(r.approved?"Confirmed":"Pending"),r.approved?"Showing on site":"Hidden"));c.appendChild(t);
+c.appendChild(E("p",null,r.text||"(no comment)"));c.appendChild(E("p","mute",r.show==="Yes"?"The customer allows it on the website.":"The customer did NOT allow it on the website."));
+var b=E("button",r.approved?"no":"ok",r.approved?"Hide from website":"Show on website");b.addEventListener("click",function(){api("o_review",{row:r.row,approved:!r.approved},function(j){if(j&&j.ok){toast("Updated");load()}})});var dr=E("button","no","Delete review");dr.style.marginLeft="8px";dr.addEventListener("click",function(){if(!confirm("Delete this review?"))return;api("o_review_delete",{row:r.row},function(j){if(j&&j.ok){toast("Review deleted");load()}})});c.appendChild(b);c.appendChild(dr);v.appendChild(c)})}
+</script>
+ <script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/sw.js");
+  }
+</script>
+</body>
+</html>
